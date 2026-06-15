@@ -1,4 +1,4 @@
-test_that("parse_consultar_procedimento_response parseia a fixture real", {
+test_that("parse_consultar_procedimento_response parseia a fixture", {
   doc <- xml2::read_xml(test_path("fixtures", "consultarProcedimento.xml"))
   res <- parse_consultar_procedimento_response(doc)
 
@@ -6,9 +6,9 @@ test_that("parse_consultar_procedimento_response parseia a fixture real", {
   expect_equal(nrow(res), 1L)
 
   # campos escalares
-  expect_equal(res$IdProcedimento, "30272383")
+  expect_equal(res$IdProcedimento, "10000001")
   expect_equal(res$ProcedimentoFormatado, "0000000000.000001/2020-11")
-  expect_equal(res$DataAutuacao, "30/06/2022")
+  expect_equal(res$DataAutuacao, "01/02/2020")
 
   # recodificação de nível de acesso (0 -> publico local, 1 -> restrito global)
   # asserções ASCII-safe (evita literal acentuado sob locale "C")
@@ -33,8 +33,8 @@ test_that("andamentos são ancorados na subárvore correta (bug Sigla/Descricao)
   res <- parse_consultar_procedimento_response(doc)
 
   # AndamentoGeracao: Descricao do andamento != Descricao da unidade
-  expect_match(res$AndamentoGeracao_Descricao, "Processo p")  # "Processo público gerado"
-  expect_equal(res$AndamentoGeracao_SiglaUnidade, "SEINFRA - GGA")
+  expect_match(res$AndamentoGeracao_Descricao, "Processo p")  # "Processo publico gerado"
+  expect_equal(res$AndamentoGeracao_SiglaUnidade, "ORG - GGA")
   expect_match(res$AndamentoGeracao_DescricaoUnidade, "Gerencia Geral de Aquisi")
   # SiglaUsuario deve ser do usuário, não da unidade (o bug antigo retornava a sigla da unidade)
   expect_equal(res$AndamentoGeracao_SiglaUsuario, "fulano.gerador")
@@ -44,7 +44,7 @@ test_that("andamentos são ancorados na subárvore correta (bug Sigla/Descricao)
   expect_true(is.na(res$AndamentoConclusao_Descricao))
 
   # UltimoAndamento
-  expect_equal(res$UltimoAndamento_SiglaUnidade, "DER-ULIC")
+  expect_equal(res$UltimoAndamento_SiglaUnidade, "ORG - ULIC")
   expect_equal(res$UltimoAndamento_SiglaUsuario, "ciclano.conclui")
 })
 
