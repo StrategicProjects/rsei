@@ -56,6 +56,6 @@ além das de
 
 ``` r
 if (FALSE) { # \dontrun{
-  consultar_documentos(c("58769333", "0003934"), config = sei_config())
+  consultar_documentos(c("0000001", "0003934"), config = sei_config())
 } # }
 ```

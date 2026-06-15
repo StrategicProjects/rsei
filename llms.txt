@@ -70,7 +70,7 @@ sei_set_default_config(
 ``` r
 
 # Consultar um processo (retorna um tibble)
-proc <- consultar_procedimento("0011108545.000056/2022-49", config = cfg)
+proc <- consultar_procedimento("0000000000.000001/2020-11", config = cfg)
 proc$Especificacao
 proc$Assuntos[[1]]          # coluna-lista com os assuntos
 

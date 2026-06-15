@@ -52,6 +52,6 @@ Um `tibble` com uma linha por item (colunas `id` e `erro` além das de
 
 ``` r
 if (FALSE) { # \dontrun{
-  consultar_publicacoes(c("67631331", "67640000"), por = "id_documento")
+  consultar_publicacoes(c("20000002", "67640000"), por = "id_documento")
 } # }
 ```

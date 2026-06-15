@@ -30,7 +30,7 @@ Um tibble de 1 linha. Campos escalares e subestruturas 1:1
 
 ``` r
 if (FALSE) { # \dontrun{
-  doc <- consultar_procedimento("0011108545.000056/2022-49", raw = TRUE)
+  doc <- consultar_procedimento("0000000000.000001/2020-11", raw = TRUE)
   parse_consultar_procedimento_response(doc)
 } # }
 ```

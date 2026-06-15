@@ -34,7 +34,7 @@ consultar_procedimento(
 - protocolo_procedimento:
 
   Character. Número do processo visível ao usuário, ex.:
-  "0030600043.002462/2024-05".
+  "0000000000.000003/2020-33".
 
 - config:
 
@@ -73,7 +73,7 @@ Um `tibble` com os dados do processo (ou um `xml_document` se
 ``` r
 if (FALSE) { # \dontrun{
   consultar_procedimento(
-    "0011108545.000056/2022-49",
+    "0000000000.000001/2020-11",
     config = sei_config(sigla_sistema = "HORTENSIAS",
                         identificacao_servico = "chave")
   )

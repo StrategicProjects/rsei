@@ -57,7 +57,7 @@ Linhas com erro têm `NA` nas demais colunas.
 
 ``` r
 if (FALSE) { # \dontrun{
-  protos <- c("0011108545.000056/2022-49", "0030600043.002462/2024-05")
+  protos <- c("0000000000.000001/2020-11", "0000000000.000003/2020-33")
   tudo <- consultar_procedimentos(protos, config = sei_config())
   tudo[, c("protocolo", "Especificacao", "NivelAcessoGlobal", "erro")]
 } # }

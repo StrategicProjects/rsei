@@ -44,7 +44,7 @@ interessados, unidades onde o processo está aberto) ficam como
 
 ``` r
 
-proc <- consultar_procedimento("0011108545.000056/2022-49", config = cfg)
+proc <- consultar_procedimento("0000000000.000001/2020-11", config = cfg)
 
 proc$Especificacao
 proc$NivelAcessoGlobal            # recodificado: "público"/"restrito"/"sigiloso"
@@ -61,7 +61,7 @@ Para obter o XML bruto (sem parse), use `raw = TRUE`:
 
 ``` r
 
-doc <- consultar_procedimento("0011108545.000056/2022-49", config = cfg, raw = TRUE)
+doc <- consultar_procedimento("0000000000.000001/2020-11", config = cfg, raw = TRUE)
 ```
 
 ## Consultar vários processos
@@ -73,7 +73,7 @@ deu certo). Um protocolo inválido não interrompe o lote:
 
 ``` r
 
-protocolos <- c("0011108545.000056/2022-49", "0030600043.002462/2024-05")
+protocolos <- c("0000000000.000001/2020-11", "0000000000.000003/2020-33")
 processos  <- consultar_procedimentos(protocolos, config = cfg)
 
 processos[, c("protocolo", "Especificacao", "NivelAcessoGlobal", "erro")]
@@ -86,11 +86,11 @@ subset(processos, !is.na(erro), c("protocolo", "erro"))
 
 ``` r
 
-doc <- consultar_documento("58769333", config = cfg)
+doc <- consultar_documento("0000001", config = cfg)
 doc$Serie_Nome
 doc$Assinaturas[[1]]
 
-pub <- consultar_publicacao(id_documento = "67631331", config = cfg)
+pub <- consultar_publicacao(id_documento = "20000002", config = cfg)
 ```
 
 ## Listagens

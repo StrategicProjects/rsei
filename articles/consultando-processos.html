@@ -111,7 +111,7 @@ andamentos) viram colunas; coleções (assuntos, interessados, unidades
 onde o processo está aberto) ficam como <em>colunas-lista</em> de
 tibbles.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">proc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_procedimento.html">consultar_procedimento</a></span><span class="op">(</span><span class="st">"0011108545.000056/2022-49"</span>, config <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">proc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_procedimento.html">consultar_procedimento</a></span><span class="op">(</span><span class="st">"0000000000.000001/2020-11"</span>, config <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">proc</span><span class="op">$</span><span class="va">Especificacao</span></span>
 <span><span class="va">proc</span><span class="op">$</span><span class="va">NivelAcessoGlobal</span>            <span class="co"># recodificado: "público"/"restrito"/"sigiloso"</span></span>
@@ -124,7 +124,7 @@ tibbles.</p>
 <span><span class="va">proc</span><span class="op">$</span><span class="va">UnidadesProcedimentoAberto</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Para obter o XML bruto (sem parse), use <code>raw = TRUE</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">doc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_procedimento.html">consultar_procedimento</a></span><span class="op">(</span><span class="st">"0011108545.000056/2022-49"</span>, config <span class="op">=</span> <span class="va">cfg</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">doc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_procedimento.html">consultar_procedimento</a></span><span class="op">(</span><span class="st">"0000000000.000001/2020-11"</span>, config <span class="op">=</span> <span class="va">cfg</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="consultar-vários-processos">Consultar vários processos<a class="anchor" aria-label="anchor" href="#consultar-v%C3%A1rios-processos"></a>
@@ -134,7 +134,7 @@ protocolos e empilha tudo num único <code>tibble</code>, com uma coluna
 <code>protocolo</code> e uma coluna <code>erro</code> (<code>NA</code>
 quando deu certo). Um protocolo inválido não interrompe o lote:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">protocolos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0011108545.000056/2022-49"</span>, <span class="st">"0030600043.002462/2024-05"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">protocolos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0000000000.000001/2020-11"</span>, <span class="st">"0000000000.000003/2020-33"</span><span class="op">)</span></span>
 <span><span class="va">processos</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_procedimentos.html">consultar_procedimentos</a></span><span class="op">(</span><span class="va">protocolos</span>, config <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">processos</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"protocolo"</span>, <span class="st">"Especificacao"</span>, <span class="st">"NivelAcessoGlobal"</span>, <span class="st">"erro"</span><span class="op">)</span><span class="op">]</span></span>
@@ -146,11 +146,11 @@ quando deu certo). Um protocolo inválido não interrompe o lote:</p>
 <h2 id="documentos-e-publicações">Documentos e publicações<a class="anchor" aria-label="anchor" href="#documentos-e-publica%C3%A7%C3%B5es"></a>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">doc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_documento.html">consultar_documento</a></span><span class="op">(</span><span class="st">"58769333"</span>, config <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">doc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_documento.html">consultar_documento</a></span><span class="op">(</span><span class="st">"0000001"</span>, config <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span></span>
 <span><span class="va">doc</span><span class="op">$</span><span class="va">Serie_Nome</span></span>
 <span><span class="va">doc</span><span class="op">$</span><span class="va">Assinaturas</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
-<span><span class="va">pub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_publicacao.html">consultar_publicacao</a></span><span class="op">(</span>id_documento <span class="op">=</span> <span class="st">"67631331"</span>, config <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">pub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consultar_publicacao.html">consultar_publicacao</a></span><span class="op">(</span>id_documento <span class="op">=</span> <span class="st">"20000002"</span>, config <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="listagens">Listagens<a class="anchor" aria-label="anchor" href="#listagens"></a>
