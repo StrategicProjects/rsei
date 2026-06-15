@@ -53,6 +53,8 @@ reference:
   contents:
   - sei_config
   - sei_set_default_config
+  - store_sei_credentials
+  - get_sei_credentials
 - title: Consultas
   desc: Consultar processos, documentos, publicações e blocos (inclui versões em lote).
   contents:
@@ -126,6 +128,7 @@ reference:
 - title: SIP — permissões
   contents:
   - sip_config
+  - sip_call
   - starts_with("listar_permissao")
   - starts_with("replicar_")
 - title: Núcleo (baixo nível)
