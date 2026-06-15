@@ -375,3 +375,37 @@ listar_documentos_processo <- function(protocolo_procedimento, config = sei_conf
   det <- det[, setdiff(names(det), names(base)), drop = FALSE]
   dplyr::bind_cols(base, det)
 }
+
+#' @title listar_publicacoes_processo
+#'
+#' @description
+#' Lista as publicações de um processo. Como o Web Service do SEI não expõe isso
+#' diretamente, a função descobre os documentos do processo com
+#' [listar_documentos_processo()] e consulta a publicação de cada um
+#' ([consultar_publicacoes()]), mantendo apenas os documentos que de fato
+#' possuem publicação.
+#'
+#' @param protocolo_procedimento Character. Número do processo.
+#' @param config Um objeto [sei_config()].
+#' @param verbose Logical.
+#'
+#' @return Um `tibble` com uma linha por publicação (coluna `id` = número do
+#'   documento, mais as colunas de [consultar_publicacao()]). Vazio se o processo
+#'   não tiver publicações.
+#'
+#' @examples
+#' \dontrun{
+#'   listar_publicacoes_processo("12.1.000000077-4", config = sei_config())
+#' }
+#'
+#' @export
+listar_publicacoes_processo <- function(protocolo_procedimento, config = sei_config(),
+                                        verbose = FALSE) {
+  docs <- listar_documentos_processo(protocolo_procedimento, config = config,
+                                     verbose = verbose)
+  if (nrow(docs) == 0) return(tibble::tibble())
+  pubs <- consultar_publicacoes(docs$documento, config = config,
+                                por = "protocolo_documento", verbose = verbose)
+  if (!"Publicacao_IdPublicacao" %in% names(pubs)) return(pubs[0, , drop = FALSE])
+  pubs[!is.na(pubs$Publicacao_IdPublicacao), , drop = FALSE]
+}

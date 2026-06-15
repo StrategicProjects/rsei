@@ -22,10 +22,12 @@ Primeira versão do `rsei`, um cliente em R para os Web Services SOAP do
 * `consultar_procedimento()` e `consultar_procedimentos()` (em lote, empilhando
   em um `tibble`).
 * `consultar_documento()` e `consultar_documentos()` (em lote).
-* `consultar_publicacao()`, `consultar_bloco()`,
-  `consultar_procedimento_individual()`.
+* `consultar_publicacao()` e `consultar_publicacoes()` (em lote).
+* `consultar_bloco()`, `consultar_procedimento_individual()`.
 * `listar_andamentos()` e `listar_andamentos_completo()` (linha do tempo do
   processo, ordenada cronologicamente).
+* Derivados do processo (reconstruídos a partir dos andamentos):
+  `listar_documentos_processo()` e `listar_publicacoes_processo()`.
 
 ## Listagens
 
