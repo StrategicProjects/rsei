@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fixture SINTETICA (dados ficticios) para testes offline do parser. -->
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:consultarDocumentoResponse>
+      <parametros xsi:type="ns1:RetornoConsultaDocumento">
+        <IdProcedimento xsi:type="xsd:string">20000001</IdProcedimento>
+        <ProcedimentoFormatado xsi:type="xsd:string">0000000000.000002/2020-22</ProcedimentoFormatado>
+        <IdDocumento xsi:type="xsd:string">20000002</IdDocumento>
+        <DocumentoFormatado xsi:type="xsd:string">0000001</DocumentoFormatado>
+        <LinkAcesso xsi:type="xsd:string">https://exemplo.invalid/sei?doc=20000002</LinkAcesso>
+        <NivelAcessoLocal xsi:type="xsd:string">0</NivelAcessoLocal>
+        <NivelAcessoGlobal xsi:type="xsd:string">0</NivelAcessoGlobal>
+        <Serie xsi:type="ns1:Serie">
+          <IdSerie xsi:type="xsd:string">100</IdSerie>
+          <Nome xsi:type="xsd:string">Anexo</Nome>
+        </Serie>
+        <Numero xsi:nil="true"/>
+        <NomeArvore xsi:type="xsd:string">Documento de exemplo</NomeArvore>
+        <Descricao xsi:nil="true"/>
+        <Data xsi:type="xsd:string">01/02/2020</Data>
+        <UnidadeElaboradora xsi:type="ns1:Unidade">
+          <IdUnidade xsi:type="xsd:string">110000020</IdUnidade>
+          <Sigla xsi:type="xsd:string">ORG - RH</Sigla>
+          <Descricao xsi:type="xsd:string">ORG - Recursos Humanos</Descricao>
+        </UnidadeElaboradora>
+        <Assinaturas SOAP-ENC:arrayType="ns1:Assinatura[0]" xsi:type="ns1:ArrayOfAssinatura"/>
+        <Campos SOAP-ENC:arrayType="ns1:Campo[0]" xsi:type="ns1:ArrayOfCampo"/>
+      </parametros>
+    </ns1:consultarDocumentoResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
