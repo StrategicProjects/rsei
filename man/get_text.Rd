@@ -2,27 +2,21 @@
 % Please edit documentation in R/parse_response.R
 \name{get_text}
 \alias{get_text}
-\title{get_text: Extract Text from an XML Node}
+\title{get_text: texto de um descendente por local-name}
 \usage{
 get_text(parent, child_name)
 }
 \arguments{
-\item{parent}{An \code{xml2} node.}
+\item{parent}{Um nó \code{xml2}.}
 
-\item{child_name}{Character. The local-name of the child element to extract.}
+\item{child_name}{Character. O local-name do elemento a extrair.}
 }
 \value{
-A character string (possibly empty).
+Uma string (possivelmente vazia).
 }
 \description{
-A helper function to find the first child node of \code{parent} with a given
-local-name, ignoring namespaces. It returns the text content unless
-\code{xsi:nil="true"}, in which case it returns an empty string.
-}
-\examples{
-\dontrun{
-  doc <- xml2::read_xml("<root><Foo xsi:nil='true'/></root>")
-  get_text(doc, "Foo")  # => ""
-}
-
+Encontra o primeiro descendente de \code{parent} com o \code{local-name}
+informado (ignorando namespaces) e devolve seu texto, ou "" se ausente /
+\code{xsi:nil="true"}. Mantido por compatibilidade; para extração ancorada
+em filho direto use o helper interno \code{get_text_child}.
 }

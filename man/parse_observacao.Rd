@@ -7,17 +7,11 @@
 parse_observacao(nd_obs)
 }
 \arguments{
-\item{nd_obs}{An \code{xml2} node for <item> in <Observacoes>.}
+\item{nd_obs}{Um nó \code{xml2} de \code{<item>}.}
 }
 \value{
-A named list with \code{$Descricao}.
+Um tibble de 1 linha com \code{Descricao}.
 }
 \description{
-Parses one <Observacao> item, extracting \code{Descricao} (and ignoring <Unidade> if present).
-}
-\examples{
-\dontrun{
-  parse_observacao(xml_item)
-}
-
+Parseia um \code{<item>} de \code{<Observacoes>}.
 }

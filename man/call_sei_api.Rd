@@ -2,36 +2,37 @@
 % Please edit documentation in R/api.R
 \name{call_sei_api}
 \alias{call_sei_api}
-\title{Generic SEI SOAP Call}
+\title{Generic SEI SOAP Call (compatibilidade)}
 \usage{
 call_sei_api(sei_url, method, params = list(), verbose = FALSE)
 }
 \arguments{
-\item{sei_url}{Character string. The SEI web service URL, e.g.
-\code{"http://server/sei/controlador_ws.php?servico=sei"}.}
+\item{sei_url}{Character. URL do Web Service do SEI.}
 
-\item{method}{Character string. The SOAP method name (e.g. "gerarProcedimento").}
+\item{method}{Character. Nome da operação SOAP (ex.: "gerarProcedimento").}
 
-\item{params}{A named list of parameters for the method body.
-If you need more complex structures, you can build them manually.}
+\item{params}{Lista nomeada de parâmetros do corpo da operação.}
 
-\item{verbose}{Logical. If \code{TRUE}, prints the final envelope and response.}
+\item{verbose}{Logical. Se \code{TRUE}, imprime envelope e resposta.}
 }
 \value{
-An \code{xml_document} (from \pkg{xml2}) representing the SOAP response.
+Um \code{xml_document} (de \pkg{xml2}) com a resposta SOAP.
 }
 \description{
-Sends an XML SOAP request to the SEI web service. Builds the SOAP
-envelope with the given method and parameter list, then performs
-a POST request with `httr2`.
+Envia uma requisição SOAP para um Web Service do SEI. Mantida por
+compatibilidade; internamente delega para \code{\link{sei_call}}, que monta o
+envelope no formato correto e trata erros HTTP e \code{SOAP Fault}.
 }
 \examples{
 \dontrun{
   resp_xml <- call_sei_api(
-    sei_url = "http://server/sei/controlador_ws.php?servico=sei",
-    method = "gerarProcedimento",
-    params = list(SiglaSistema="MySys", IdUnidade="100")
+    sei_url = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+    method  = "listarUnidades",
+    params  = list(SiglaSistema = "HORTENSIAS", IdentificacaoServico = "chave")
   )
 }
 
+}
+\seealso{
+\code{\link{sei_call}}
 }

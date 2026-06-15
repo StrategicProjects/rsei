@@ -4,3 +4,8 @@
 ^README\.Rmd$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^CLAUDE\.md$
+^PLAN\.md$
+^memory$
+^\.claude$
+^LICENSE\.md$

@@ -7,34 +7,26 @@
 parse_consultar_procedimento_response(doc)
 }
 \arguments{
-\item{doc}{An \code{xml2::xml_document} containing the SOAP response
-for the operation "consultarProcedimento".}
+\item{doc}{Um \code{xml2::xml_document} com a resposta de "consultarProcedimento".}
 }
 \value{
-A named list with elements:
-\itemize{
-  \item \code{IdProcedimento}, \code{ProcedimentoFormatado}, \code{Especificacao}, \code{DataAutuacao},
-        \code{LinkAcesso}, \code{NivelAcessoLocal}, \code{NivelAcessoGlobal}
-  \item \code{TipoProcedimento} (list)
-  \item \code{AndamentoGeracao}, \code{AndamentoConclusao}, \code{UltimoAndamento}
-  \item \code{UnidadesProcedimentoAberto} (list of sub-lists)
-  \item \code{Assuntos}, \code{Interessados}, \code{Observacoes},
-        \code{ProcedimentosRelacionados}, \code{ProcedimentosAnexados}
-}
+Um tibble de 1 linha. Campos escalares e subestruturas 1:1
+(TipoProcedimento e andamentos) viram colunas com prefixo; arrays
+(\code{Assuntos}, \code{Interessados}, \code{Observacoes},
+\code{UnidadesProcedimentoAberto}, \code{ProcedimentosRelacionados},
+\code{ProcedimentosAnexados}) ficam como colunas-lista de tibbles.
 }
 \description{
-The main parser that finds the <parametros> node under
-<consultarProcedimentoResponse>, extracts top-level fields
-(e.g., \code{IdProcedimento}, \code{Especificacao}, \code{NivelAcessoLocal}, etc.),
-recodes \code{NivelAcessoLocal} and \code{NivelAcessoGlobal} using
-\code{\link{recodify_access_level}}, and parses substructures like
-\code{AndamentoGeracao}, \code{Assuntos}, \code{Interessados}, etc.
+Parser principal de \code{consultarProcedimento}: localiza o nó
+\code{<parametros>}, extrai os campos escalares, recodifica
+\code{NivelAcessoLocal}/\code{NivelAcessoGlobal} e parseia as subestruturas
+(\code{TipoProcedimento}, andamentos, e os arrays \code{Assuntos},
+\code{Interessados}, etc.).
 }
 \examples{
 \dontrun{
-  resp_xml <- call_sei_api(..., method="consultarProcedimento")
-  result <- parse_consultar_procedimento_response(resp_xml)
-  str(result)
+  doc <- consultar_procedimento("0000000000.000001/2020-11", raw = TRUE)
+  parse_consultar_procedimento_response(doc)
 }
 
 }

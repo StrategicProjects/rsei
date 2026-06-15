@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SOAP-ENV:Body>
+    <ns1:incluirDocumentoResponse>
+      <parametros xsi:type="ns1:RetornoInclusaoDocumento">
+        <IdDocumento xsi:type="xsd:string">1140000000872</IdDocumento>
+        <DocumentoFormatado xsi:type="xsd:string">0003934</DocumentoFormatado>
+        <LinkAcesso xsi:type="xsd:string">https://sei.pe.gov.br/sei/x?doc=1140000000872</LinkAcesso>
+      </parametros>
+    </ns1:incluirDocumentoResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

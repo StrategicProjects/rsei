@@ -7,17 +7,11 @@
 parse_assunto(node_ass)
 }
 \arguments{
-\item{node_ass}{An \code{xml2} node for <item> in <Assuntos>.}
+\item{node_ass}{Um nó \code{xml2} de \code{<item>}.}
 }
 \value{
-A named list with \code{$CodigoEstruturado} and \code{$Descricao}.
+Um tibble de 1 linha com \code{CodigoEstruturado} e \code{Descricao}.
 }
 \description{
-Parses one <Assunto> item, extracting \code{CodigoEstruturado} and \code{Descricao}.
-}
-\examples{
-\dontrun{
-  parse_assunto(xml_item)
-}
-
+Parseia um \code{<item>} de \code{<Assuntos>}.
 }

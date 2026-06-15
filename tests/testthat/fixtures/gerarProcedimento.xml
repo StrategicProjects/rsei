@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:gerarProcedimentoResponse>
+      <parametros xsi:type="ns1:RetornoGeracaoProcedimento">
+        <IdProcedimento xsi:type="xsd:string">1210000000774</IdProcedimento>
+        <ProcedimentoFormatado xsi:type="xsd:string">12.1.000000077-4</ProcedimentoFormatado>
+        <LinkAcesso xsi:type="xsd:string">https://sei.pe.gov.br/sei/x?id=1210000000774</LinkAcesso>
+        <RetornoInclusaoDocumentos SOAP-ENC:arrayType="ns1:RetornoInclusaoDocumento[1]" xsi:type="ns1:ArrayOfRetornoInclusaoDocumento">
+          <item xsi:type="ns1:RetornoInclusaoDocumento">
+            <IdDocumento xsi:type="xsd:string">1140000000872</IdDocumento>
+            <DocumentoFormatado xsi:type="xsd:string">0003934</DocumentoFormatado>
+            <LinkAcesso xsi:type="xsd:string">https://sei.pe.gov.br/sei/x?doc=1140000000872</LinkAcesso>
+          </item>
+        </RetornoInclusaoDocumentos>
+      </parametros>
+    </ns1:gerarProcedimentoResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

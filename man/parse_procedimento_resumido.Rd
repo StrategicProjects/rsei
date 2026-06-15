@@ -7,18 +7,12 @@
 parse_procedimento_resumido(nd_pr)
 }
 \arguments{
-\item{nd_pr}{An \code{xml2} node for <item> in <ProcedimentosRelacionados> or <ProcedimentosAnexados>.}
+\item{nd_pr}{Um nó \code{xml2} de \code{<item>}.}
 }
 \value{
-A named list with \code{$IdProcedimento} and \code{$ProcedimentoFormatado}.
+Um tibble de 1 linha com \code{IdProcedimento} e \code{ProcedimentoFormatado}.
 }
 \description{
-Parses one <ProcedimentoResumido> item, extracting \code{IdProcedimento} and
-\code{ProcedimentoFormatado}.
-}
-\examples{
-\dontrun{
-  parse_procedimento_resumido(xml_item)
-}
-
+Parseia um \code{<item>} de \code{<ProcedimentosRelacionados>}
+ou \code{<ProcedimentosAnexados>}.
 }

@@ -5,11 +5,8 @@
 \title{consultar_procedimento}
 \usage{
 consultar_procedimento(
-  sei_url = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
-  sigla_sistema = "HORTENSIAS",
-  identificacao_servico = "publicacao",
-  id_unidade = "",
   protocolo_procedimento,
+  config = sei_config(),
   sin_retornar_assuntos = "S",
   sin_retornar_interessados = "S",
   sin_retornar_observacoes = "S",
@@ -18,54 +15,47 @@ consultar_procedimento(
   sin_retornar_ultimo_andamento = "S",
   sin_retornar_unidades_procedimento_aberto = "S",
   sin_retornar_procedimentos_relacionados = "S",
-  sin_retornar_procedimentos_anexados = "S"
+  sin_retornar_procedimentos_anexados = "S",
+  raw = FALSE,
+  sei_url = NULL,
+  sigla_sistema = NULL,
+  identificacao_servico = NULL,
+  id_unidade = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
-\item{sei_url}{Character. The SEI Web Service endpoint, typically something like
-"https://sei.pe.gov.br/sei/ws/SeiWS.php".}
+\item{protocolo_procedimento}{Character. Número do processo visível ao
+usuário, ex.: "0000000000.000003/2020-33".}
 
-\item{sigla_sistema}{Character. The system sigla, e.g. "HORTENSIAS".}
+\item{config}{Um objeto \code{\link{sei_config}}.}
 
-\item{identificacao_servico}{Character. The key/service ID in SEI, e.g. "publicacao".}
+\item{sin_retornar_assuntos, sin_retornar_interessados, sin_retornar_observacoes, sin_retornar_andamento_geracao, sin_retornar_andamento_conclusao, sin_retornar_ultimo_andamento, sin_retornar_unidades_procedimento_aberto, sin_retornar_procedimentos_relacionados, sin_retornar_procedimentos_anexados}{"S" ou "N", indicando se cada bloco de informação deve ser retornado.}
 
-\item{id_unidade}{Character. The SEI unit ID. If not needed, pass an empty string.}
+\item{raw}{Logical. Se \code{TRUE}, devolve o \code{xml_document} bruto em vez
+do \code{tibble} parseado.}
 
-\item{protocolo_procedimento}{Character. The visible process number, e.g. "0000000000.000003/2020-33".}
+\item{sei_url, sigla_sistema, identificacao_servico, id_unidade}{Compatibilidade:
+se informados, sobrescrevem os valores de \code{config}.}
 
-\item{sin_retornar_assuntos, sin_retornar_interessados, sin_retornar_observacoes, }{sin_retornar_andamento_geracao,sin_retornar_andamento_conclusao,sin_retornar_ultimo_andamento,
-sin_retornar_unidades_procedimento_aberto,sin_retornar_procedimentos_relacionados,
-sin_retornar_procedimentos_anexados
-"S" or "N" to indicate whether you want those fields returned in the response.}
+\item{verbose}{Logical. Se \code{TRUE}, imprime envelope e resposta.}
 }
 \value{
-An xml2::xml_document (SOAP response) which you can parse further.
+Um \code{tibble} com os dados do processo (ou um \code{xml_document}
+se \code{raw = TRUE}).
 }
 \description{
-Sends a SOAP request to SEI (via \code{consultarProcedimento}) to retrieve
-process data. Uses \code{glue::glue} to build the envelope, then performs
-the request with \code{httr2}.
+Chama a operação \code{consultarProcedimento} do SEI para recuperar os dados
+de um processo. Internamente usa \code{\link{sei_call}} e, por padrão,
+devolve o resultado já parseado como \code{tibble}.
 }
 \examples{
 \dontrun{
-  doc <- consultar_procedimento(
-    sei_url = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
-    sigla_sistema = "HORTENSIAS",
-    identificacao_servico = "publicacao",
-    id_unidade = "",
-    protocolo_procedimento = "0000000000.000003/2020-33",
-    sin_retornar_assuntos = "S",
-    sin_retornar_interessados = "S",
-    sin_retornar_observacoes = "S",
-    sin_retornar_andamento_geracao = "S",
-    sin_retornar_andamento_conclusao = "S",
-    sin_retornar_ultimo_andamento = "S",
-    sin_retornar_unidades_procedimento_aberto = "S",
-    sin_retornar_procedimentos_relacionados = "S",
-    sin_retornar_procedimentos_anexados = "S"
+  consultar_procedimento(
+    "0000000000.000001/2020-11",
+    config = sei_config(sigla_sistema = "HORTENSIAS",
+                        identificacao_servico = "chave")
   )
-  print(doc)
-  # Then parse doc using your parser functions.
 }
 
 }
