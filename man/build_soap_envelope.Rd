@@ -2,24 +2,31 @@
 % Please edit documentation in R/soap_helpers.R
 \name{build_soap_envelope}
 \alias{build_soap_envelope}
-\title{Build a SOAP Envelope}
+\title{Build a SOAP Envelope (compatibilidade)}
 \usage{
 build_soap_envelope(method, body_content)
 }
 \arguments{
-\item{method}{Character string. The name of the SOAP method (e.g., "gerarProcedimento").}
+\item{method}{Character. Nome da operação SOAP (ex.: "gerarProcedimento").}
 
-\item{body_content}{Character string. The XML content to be placed inside the method tag.}
+\item{body_content}{Character. XML dos parâmetros a inserir na operação.}
 }
 \value{
-A character string containing the complete SOAP envelope XML.
+Uma string com o envelope SOAP completo.
 }
 \description{
-Creates a basic SOAP envelope (SOAP 1.1) with the given `method` as the root
-element in the `<soapenv:Body>`. The `body_content` should be a string containing
-any child XML to be inserted.
+Cria um envelope SOAP 1.1 no formato do SEI com \code{method} como elemento
+raiz dentro de \code{<soapenv:Body>}. \code{body_content} deve ser a string
+XML já renderizada dos parâmetros (ver \code{\link{build_parameters_xml}}).
+
+Para novo código, prefira \code{\link{sei_build_envelope}}, que monta os
+parâmetros a partir de uma lista R.
 }
 \examples{
-build_soap_envelope("myMethod", "<param>value</param>")
+build_soap_envelope("listarUnidades",
+  build_parameters_xml(list(SiglaSistema = "X")))
 
+}
+\seealso{
+\code{\link{sei_build_envelope}}
 }

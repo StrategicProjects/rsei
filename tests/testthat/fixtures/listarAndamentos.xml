@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:listarAndamentosResponse>
+      <parametros SOAP-ENC:arrayType="ns1:Andamento[3]" xsi:type="ns1:ArrayOfAndamento">
+        <item xsi:type="ns1:Andamento">
+          <IdAndamento xsi:type="xsd:string">300</IdAndamento>
+          <IdTarefa xsi:type="xsd:string">48</IdTarefa>
+          <Descricao xsi:type="xsd:string">Processo recebido na unidade</Descricao>
+          <DataHora xsi:type="xsd:string">07/04/2026 15:43:17</DataHora>
+          <Unidade xsi:type="ns1:Unidade">
+            <IdUnidade xsi:type="xsd:string">110008723</IdUnidade>
+            <Sigla xsi:type="xsd:string">SEPE - GS</Sigla>
+            <Descricao xsi:type="xsd:string">SEPE - Gabinete</Descricao>
+          </Unidade>
+          <Usuario xsi:type="ns1:Usuario">
+            <IdUsuario xsi:type="xsd:string">2</IdUsuario>
+            <Sigla xsi:type="xsd:string">manuella.santos</Sigla>
+            <Nome xsi:type="xsd:string">Manuella Pereira</Nome>
+          </Usuario>
+          <Atributos SOAP-ENC:arrayType="ns1:AtributoAndamento[0]" xsi:type="ns1:ArrayOfAtributoAndamento"/>
+        </item>
+        <item xsi:type="ns1:Andamento">
+          <IdAndamento xsi:type="xsd:string">100</IdAndamento>
+          <IdTarefa xsi:type="xsd:string">1</IdTarefa>
+          <Descricao xsi:type="xsd:string">Processo gerado</Descricao>
+          <DataHora xsi:type="xsd:string">07/04/2026 10:57:35</DataHora>
+          <Unidade xsi:type="ns1:Unidade">
+            <IdUnidade xsi:type="xsd:string">110010886</IdUnidade>
+            <Sigla xsi:type="xsd:string">SEPE - SEM</Sigla>
+            <Descricao xsi:type="xsd:string">SEPE - Sec. Exec. Monitoramento</Descricao>
+          </Unidade>
+          <Usuario xsi:type="ns1:Usuario">
+            <IdUsuario xsi:type="xsd:string">1</IdUsuario>
+            <Sigla xsi:type="xsd:string">marcos.wasiliew</Sigla>
+            <Nome xsi:type="xsd:string">Marcos Eberli Wasiliew</Nome>
+          </Usuario>
+          <Atributos SOAP-ENC:arrayType="ns1:AtributoAndamento[0]" xsi:type="ns1:ArrayOfAtributoAndamento"/>
+        </item>
+        <item xsi:type="ns1:Andamento">
+          <IdAndamento xsi:type="xsd:string">200</IdAndamento>
+          <IdTarefa xsi:type="xsd:string">32</IdTarefa>
+          <Descricao xsi:type="xsd:string">Processo remetido pela unidade</Descricao>
+          <DataHora xsi:type="xsd:string">07/04/2026 14:10:00</DataHora>
+          <Unidade xsi:type="ns1:Unidade">
+            <IdUnidade xsi:type="xsd:string">110010886</IdUnidade>
+            <Sigla xsi:type="xsd:string">SEPE - SEM</Sigla>
+            <Descricao xsi:type="xsd:string">SEPE - Sec. Exec. Monitoramento</Descricao>
+          </Unidade>
+          <Usuario xsi:type="ns1:Usuario">
+            <IdUsuario xsi:type="xsd:string">1</IdUsuario>
+            <Sigla xsi:type="xsd:string">marcos.wasiliew</Sigla>
+            <Nome xsi:type="xsd:string">Marcos Eberli Wasiliew</Nome>
+          </Usuario>
+          <Atributos SOAP-ENC:arrayType="ns1:AtributoAndamento[1]" xsi:type="ns1:ArrayOfAtributoAndamento">
+            <item xsi:type="ns1:AtributoAndamento">
+              <Nome xsi:type="xsd:string">UNIDADE</Nome>
+              <Valor xsi:type="xsd:string">SEPE - GS</Valor>
+              <IdOrigem xsi:type="xsd:string">110008723</IdOrigem>
+            </item>
+          </Atributos>
+        </item>
+      </parametros>
+    </ns1:listarAndamentosResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

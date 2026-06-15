@@ -1,3 +1,11 @@
+# file: R/parse_response.R
+#
+# Parsers de respostas SOAP do SEI -> tibbles. Os helpers genéricos
+# (`sei_node_child`, `get_text_child`, `parse_struct`, `parse_items`) evitam a
+# repetição do padrão `map(...) %>% bind_rows()` e ancoram a extração na
+# subárvore correta (filho direto), evitando o bug de pegar o primeiro
+# descendente homônimo (ex.: `Sigla` de Unidade vs. de Usuario).
+
 ##############################################
 # 1) recodify_access_level
 ##############################################
@@ -5,34 +13,29 @@
 #' @title Recodify SEI Access Level
 #'
 #' @description
-#' Converts SEI numeric access-level codes into human-readable strings:
-#' \itemize{
-#'   \item "0" -> "público"
-#'   \item "1" -> "restrito"
-#'   \item "2" -> "sigiloso"
-#' }
+#' Converte os códigos numéricos de nível de acesso do SEI em texto:
+#' "0" -> "público", "1" -> "restrito", "2" -> "sigiloso". Valores ausentes,
+#' vazios ou fora de \code{c("0","1","2")} são devolvidos inalterados.
 #'
-#' If the input is missing, empty, or not in \code{c("0", "1", "2")}, it returns
-#' the original value.
+#' @param val Character, geralmente "0", "1" ou "2".
 #'
-#' @param val A character string, usually "0", "1", or "2".
-#'
-#' @return A character string: "público", "restrito", "sigiloso", or the original value.
+#' @return "público", "restrito", "sigiloso", ou o valor original.
 #'
 #' @examples
 #' recodify_access_level("0")  # "público"
-#' recodify_access_level("1")  # "restrito"
 #' recodify_access_level("2")  # "sigiloso"
-#' recodify_access_level("X")  # "X"
 #'
 #' @export
 recodify_access_level <- function(val) {
-  if (is.na(val) || val == "") {
+  if (length(val) == 0 || is.na(val) || val == "") {
     return(val)
   }
+  # "publico" construído via codepoints p/ evitar literal acentuado no fonte
+  # (R sob locale "C" corromperia um literal UTF-8). 250 = U+00FA (u acentuado).
+  publico <- intToUtf8(c(112L, 250L, 98L, 108L, 105L, 99L, 111L))
   switch(
     val,
-    "0" = "público",
+    "0" = publico,
     "1" = "restrito",
     "2" = "sigiloso",
     val  # default
@@ -41,26 +44,21 @@ recodify_access_level <- function(val) {
 
 
 ##############################################
-# 2) get_text
+# 2) helpers de extração XML
 ##############################################
 
-#' @title get_text: Extract Text from an XML Node
+#' @title get_text: texto de um descendente por local-name
 #'
 #' @description
-#' A helper function to find the first child node of \code{parent} with a given
-#' local-name, ignoring namespaces. It returns the text content unless
-#' \code{xsi:nil="true"}, in which case it returns an empty string.
+#' Encontra o primeiro descendente de \code{parent} com o \code{local-name}
+#' informado (ignorando namespaces) e devolve seu texto, ou "" se ausente /
+#' \code{xsi:nil="true"}. Mantido por compatibilidade; para extração ancorada
+#' em filho direto use o helper interno \code{get_text_child}.
 #'
-#' @param parent An \code{xml2} node.
-#' @param child_name Character. The local-name of the child element to extract.
+#' @param parent Um nó \code{xml2}.
+#' @param child_name Character. O local-name do elemento a extrair.
 #'
-#' @return A character string (possibly empty).
-#'
-#' @examples
-#' \dontrun{
-#'   doc <- xml2::read_xml("<root><Foo xsi:nil='true'/></root>")
-#'   get_text(doc, "Foo")  # => ""
-#' }
+#' @return Uma string (possivelmente vazia).
 #'
 #' @export
 get_text <- function(parent, child_name) {
@@ -73,356 +71,255 @@ get_text <- function(parent, child_name) {
   xml2::xml_text(nd)
 }
 
+# Nó filho DIRETO por local-name; NULL se ausente ou xsi:nil.
+sei_node_child <- function(parent, name) {
+  if (is.null(parent)) return(NULL)
+  nd <- xml2::xml_find_first(parent, sprintf("./*[local-name()='%s']", name))
+  if (inherits(nd, "xml_missing") || is.na(nd)) return(NULL)
+  if (xml2::xml_attr(nd, "nil", default = "") == "true") return(NULL)
+  nd
+}
 
-##############################################
-# 3) parse_andamento
-##############################################
+# Texto de um filho DIRETO por local-name; NA_character_ se ausente / nil.
+get_text_child <- function(parent, name) {
+  if (is.null(parent)) return(NA_character_)
+  nd <- xml2::xml_find_first(parent, sprintf("./*[local-name()='%s']", name))
+  if (inherits(nd, "xml_missing") || is.na(nd)) return(NA_character_)
+  if (xml2::xml_attr(nd, "nil", default = "") == "true") return(NA_character_)
+  xml2::xml_text(nd)
+}
 
-#' @title parse_andamento: Parse an <Andamento> Node
-#'
-#' @description
-#' Parses an \code{<Andamento>} node (including \code{<Descricao>}, \code{<DataHora>},
-#' \code{<Unidade>}, \code{<Usuario>}) and returns a named list. If the node
-#' is missing or \code{xsi:nil="true"}, returns \code{NULL}.
-#'
-#' @param node_and An \code{xml2} node that may represent an <Andamento>.
-#'
-#' @return A named list with elements \code{$Descricao}, \code{$DataHora}, \code{$Unidade}, \code{$Usuario},
-#'   or \code{NULL} if not found.
-#'
-#' @examples
-#' \dontrun{
-#'   # Suppose you have <Andamento><Descricao>... etc ...
-#'   parse_andamento(xml_andamento)
-#' }
-#'
-#' @export
-parse_andamento <- function(node_and) {
-  if (inherits(node_and, "xml_missing") || is.na(node_and)) {
-    return(tibble(
-      Descricao = NA_character_,
-      DataHora = NA_character_,
-      IdUnidade = NA_character_,
-      SiglaUnidade =  NA_character_,
-      DescricaoUnidade = NA_character_,
-      IdUsuario = NA_character_,
-      SiglaUsuario = NA_character_,
-      NomeUsuario =  NA_character_
-    ))
+# Constrói um tibble de 1 linha a partir de um nó e um mapa de campos.
+# `fields` é um vetor nomeado: nomes = colunas do tibble; valores = local-names
+# dos filhos diretos. Se `node` for NULL, devolve uma linha de NAs.
+parse_struct <- function(node, fields) {
+  vals <- lapply(unname(fields), function(f) get_text_child(node, f))
+  names(vals) <- names(fields)
+  tibble::as_tibble(vals)
+}
+
+# Itera sobre <array_name>/<item> de `parent`, aplicando `item_parser` a cada um.
+# Devolve um tibble (vazio com 0 linhas se não houver itens).
+parse_items <- function(parent, array_name, item_parser) {
+  items <- xml2::xml_find_all(
+    parent,
+    sprintf(".//*[local-name()='%s']/*[local-name()='item']", array_name)
+  )
+  if (length(items) == 0) return(tibble::tibble())
+  dplyr::bind_rows(purrr::map(items, item_parser))
+}
+
+# Versão VETORIZADA de parse_struct para um conjunto de nós (nodeset).
+# Para cada campo faz UMA busca xml_find_first sobre todo o nodeset, em vez de
+# um XPath por item — essencial p/ listas grandes (ex.: 18k unidades).
+# `fields` é um vetor nomeado (coluna = local-name do filho direto).
+parse_struct_nodeset <- function(items, fields) {
+  if (length(items) == 0) {
+    cols <- stats::setNames(replicate(length(fields), character(0), simplify = FALSE),
+                            names(fields))
+    return(tibble::as_tibble(cols))
   }
-  if (xml2::xml_attr(node_and, "nil", default = "") == "true") {
-    return(tibble(
-      Descricao = NA_character_,
-      DataHora = NA_character_,
-      IdUnidade = NA_character_,
-      SiglaUnidade =  NA_character_,
-      DescricaoUnidade = NA_character_,
-      IdUsuario = NA_character_,
-      SiglaUsuario = NA_character_,
-      NomeUsuario =  NA_character_
-    ))
-  }
-  list(
-    Descricao = get_text(node_and, "Descricao"),
-    DataHora  = get_text(node_and, "DataHora"),
-    Unidade   = list(
-      IdUnidade = get_text(node_and, "IdUnidade"),
-      SiglaUnidade     = get_text(node_and, "Sigla"),
-      DescricaoUnidade = get_text(node_and, "Descricao")
-    ) %>% bind_rows(),
-    Usuario   = list(
-      IdUsuario = get_text(node_and, "IdUsuario"),
-      SiglaUsuario     = get_text(node_and, "Sigla"),
-      NomeUsuario      = get_text(node_and, "Nome")
-    ) %>% bind_rows()
-  ) %>%
-    bind_rows() %>%
-    unnest(c(Unidade, Usuario))
+  cols <- lapply(unname(fields), function(f) {
+    nd  <- xml2::xml_find_first(items, sprintf("./*[local-name()='%s']", f))
+    txt <- xml2::xml_text(nd)               # NA para nós ausentes
+    nil <- xml2::xml_attr(nd, "nil")
+    txt[!is.na(nil) & nil == "true"] <- NA_character_
+    txt
+  })
+  names(cols) <- names(fields)
+  tibble::as_tibble(cols)
 }
 
 
 ##############################################
-# 4) parse_unidade_procedimento_aberto
+# 3) parse_andamento (corrigido: ancorado em subárvore)
+##############################################
+
+#' @title parse_andamento: Parse a \code{<Andamento>} Node
+#'
+#' @description
+#' Parseia um nó \code{<Andamento>} (\code{Descricao}, \code{DataHora}, e as
+#' subestruturas \code{Unidade} e \code{Usuario}) num tibble de 1 linha. Se o nó
+#' for ausente ou \code{xsi:nil="true"}, devolve uma linha de \code{NA}.
+#'
+#' @param node_and Um nó \code{xml2} representando um \code{<Andamento>}.
+#'
+#' @return Um tibble de 1 linha com \code{Descricao}, \code{DataHora},
+#'   \code{IdUnidade}, \code{SiglaUnidade}, \code{DescricaoUnidade},
+#'   \code{IdUsuario}, \code{SiglaUsuario}, \code{NomeUsuario}.
+#'
+#' @export
+parse_andamento <- function(node_and) {
+  empty <- tibble::tibble(
+    Descricao = NA_character_, DataHora = NA_character_,
+    IdUnidade = NA_character_, SiglaUnidade = NA_character_,
+    DescricaoUnidade = NA_character_,
+    IdUsuario = NA_character_, SiglaUsuario = NA_character_,
+    NomeUsuario = NA_character_
+  )
+  if (is.null(node_and) || inherits(node_and, "xml_missing") || is.na(node_and)) {
+    return(empty)
+  }
+  if (xml2::xml_attr(node_and, "nil", default = "") == "true") {
+    return(empty)
+  }
+
+  unid <- sei_node_child(node_and, "Unidade")
+  usr  <- sei_node_child(node_and, "Usuario")
+
+  tibble::tibble(
+    Descricao        = get_text_child(node_and, "Descricao"),
+    DataHora         = get_text_child(node_and, "DataHora"),
+    IdUnidade        = get_text_child(unid, "IdUnidade"),
+    SiglaUnidade     = get_text_child(unid, "Sigla"),
+    DescricaoUnidade = get_text_child(unid, "Descricao"),
+    IdUsuario        = get_text_child(usr, "IdUsuario"),
+    SiglaUsuario     = get_text_child(usr, "Sigla"),
+    NomeUsuario      = get_text_child(usr, "Nome")
+  )
+}
+
+
+##############################################
+# 4) parse_unidade_procedimento_aberto (corrigido)
 ##############################################
 
 #' @title parse_unidade_procedimento_aberto
 #'
 #' @description
-#' Parses a node presumably within \code{<UnidadesProcedimentoAberto><item>...</item></UnidadesProcedimentoAberto>},
-#' extracting \code{<Unidade>} and \code{<UsuarioAtribuicao>}.
+#' Parseia um \code{<item>} de \code{<UnidadesProcedimentoAberto>}, extraindo as
+#' subestruturas \code{Unidade} e \code{UsuarioAtribuicao}.
 #'
-#' @param node_upa An \code{xml2} node for one <item> in <UnidadesProcedimentoAberto>.
+#' @param node_upa Um nó \code{xml2} de um \code{<item>}.
 #'
-#' @return A named list with \code{$Unidade} and \code{$UsuarioAtribuicao}, each a sub-list
-#'   containing fields like \code{IdUnidade}, \code{Sigla}, \code{Descricao}.
-#'
-#' @examples
-#' \dontrun{
-#'   parse_unidade_procedimento_aberto(xml_item)
-#' }
+#' @return Um tibble de 1 linha com os campos da unidade e do usuário de atribuição.
 #'
 #' @export
 parse_unidade_procedimento_aberto <- function(node_upa) {
-  unid_node <- xml2::xml_find_first(node_upa, ".//*[local-name()='Unidade']")
-  usr_node  <- xml2::xml_find_first(node_upa, ".//*[local-name()='UsuarioAtribuicao']")
+  unid <- sei_node_child(node_upa, "Unidade")
+  usr  <- sei_node_child(node_upa, "UsuarioAtribuicao")
 
-  bind_cols(
-    Unidade = list(
-      IdUnidade = get_text(unid_node, "IdUnidade"),
-      SiglaUnidade = get_text(unid_node, "Sigla"),
-      DescricaoUnidade = get_text(unid_node, "Descricao")
-    )  %>% bind_rows(),
-    UsuarioAtribuicao = list(
-      IdUsuario = get_text(usr_node, "IdUsuario"),
-      SiglaUsuario = get_text(usr_node, "Sigla"),
-      NomeUsuario = get_text(usr_node, "Nome")
-    )
+  tibble::tibble(
+    IdUnidade        = get_text_child(unid, "IdUnidade"),
+    SiglaUnidade     = get_text_child(unid, "Sigla"),
+    DescricaoUnidade = get_text_child(unid, "Descricao"),
+    IdUsuario        = get_text_child(usr, "IdUsuario"),
+    SiglaUsuario     = get_text_child(usr, "Sigla"),
+    NomeUsuario      = get_text_child(usr, "Nome")
   )
 }
 
 
 ##############################################
-# 5) parse_assunto
+# 5) parsers de itens simples
 ##############################################
 
 #' @title parse_assunto
-#'
-#' @description
-#' Parses one <Assunto> item, extracting \code{CodigoEstruturado} and \code{Descricao}.
-#'
-#' @param node_ass An \code{xml2} node for <item> in <Assuntos>.
-#'
-#' @return A named list with \code{$CodigoEstruturado} and \code{$Descricao}.
-#'
-#' @examples
-#' \dontrun{
-#'   parse_assunto(xml_item)
-#' }
-#'
+#' @description Parseia um \code{<item>} de \code{<Assuntos>}.
+#' @param node_ass Um nó \code{xml2} de \code{<item>}.
+#' @return Um tibble de 1 linha com \code{CodigoEstruturado} e \code{Descricao}.
 #' @export
 parse_assunto <- function(node_ass) {
-  list(
-    CodigoEstruturado = get_text(node_ass, "CodigoEstruturado"),
-    Descricao         = get_text(node_ass, "Descricao")
-  ) %>%
-    bind_rows()
+  parse_struct(node_ass, c(CodigoEstruturado = "CodigoEstruturado",
+                           Descricao = "Descricao"))
 }
-
-
-##############################################
-# 6) parse_interessado
-##############################################
 
 #' @title parse_interessado
-#'
-#' @description
-#' Parses one <Interessado> item, extracting \code{Sigla} and \code{Nome}.
-#'
-#' @param nd_int An \code{xml2} node for <item> in <Interessados>.
-#'
-#' @return A named list with \code{$Sigla} and \code{$Nome}.
-#'
-#' @examples
-#' \dontrun{
-#'   parse_interessado(xml_item)
-#' }
-#'
+#' @description Parseia um \code{<item>} de \code{<Interessados>}.
+#' @param nd_int Um nó \code{xml2} de \code{<item>}.
+#' @return Um tibble de 1 linha com \code{Sigla} e \code{Nome}.
 #' @export
 parse_interessado <- function(nd_int) {
-  list(
-    Sigla = get_text(nd_int, "Sigla"),
-    Nome  = get_text(nd_int, "Nome")
-  ) %>%
-    bind_rows()
+  parse_struct(nd_int, c(Sigla = "Sigla", Nome = "Nome"))
 }
-
-
-##############################################
-# 7) parse_observacao
-##############################################
 
 #' @title parse_observacao
-#'
-#' @description
-#' Parses one <Observacao> item, extracting \code{Descricao} (and ignoring <Unidade> if present).
-#'
-#' @param nd_obs An \code{xml2} node for <item> in <Observacoes>.
-#'
-#' @return A named list with \code{$Descricao}.
-#'
-#' @examples
-#' \dontrun{
-#'   parse_observacao(xml_item)
-#' }
-#'
+#' @description Parseia um \code{<item>} de \code{<Observacoes>}.
+#' @param nd_obs Um nó \code{xml2} de \code{<item>}.
+#' @return Um tibble de 1 linha com \code{Descricao}.
 #' @export
 parse_observacao <- function(nd_obs) {
-  list(
-    Descricao = get_text(nd_obs, "Descricao")
-  ) %>%
-    bind_rows()
+  parse_struct(nd_obs, c(Descricao = "Descricao"))
 }
-
-
-##############################################
-# 8) parse_procedimento_resumido
-##############################################
 
 #' @title parse_procedimento_resumido
-#'
-#' @description
-#' Parses one <ProcedimentoResumido> item, extracting \code{IdProcedimento} and
-#' \code{ProcedimentoFormatado}.
-#'
-#' @param nd_pr An \code{xml2} node for <item> in <ProcedimentosRelacionados> or <ProcedimentosAnexados>.
-#'
-#' @return A named list with \code{$IdProcedimento} and \code{$ProcedimentoFormatado}.
-#'
-#' @examples
-#' \dontrun{
-#'   parse_procedimento_resumido(xml_item)
-#' }
-#'
+#' @description Parseia um \code{<item>} de \code{<ProcedimentosRelacionados>}
+#'   ou \code{<ProcedimentosAnexados>}.
+#' @param nd_pr Um nó \code{xml2} de \code{<item>}.
+#' @return Um tibble de 1 linha com \code{IdProcedimento} e \code{ProcedimentoFormatado}.
 #' @export
 parse_procedimento_resumido <- function(nd_pr) {
-  list(
-    IdProcedimento       = get_text(nd_pr, "IdProcedimento"),
-    ProcedimentoFormatado= get_text(nd_pr, "ProcedimentoFormatado")
-    # If <TipoProcedimento> is nested, parse similarly
-  ) %>%
-    bind_rows()
+  parse_struct(nd_pr, c(IdProcedimento = "IdProcedimento",
+                        ProcedimentoFormatado = "ProcedimentoFormatado"))
 }
 
 
 ##############################################
-# 9) parse_consultar_procedimento_response
+# 6) parse_consultar_procedimento_response
 ##############################################
 
 #' @title parse_consultar_procedimento_response
 #'
 #' @description
-#' The main parser that finds the <parametros> node under
-#' <consultarProcedimentoResponse>, extracts top-level fields
-#' (e.g., \code{IdProcedimento}, \code{Especificacao}, \code{NivelAcessoLocal}, etc.),
-#' recodes \code{NivelAcessoLocal} and \code{NivelAcessoGlobal} using
-#' \code{\link{recodify_access_level}}, and parses substructures like
-#' \code{AndamentoGeracao}, \code{Assuntos}, \code{Interessados}, etc.
+#' Parser principal de \code{consultarProcedimento}: localiza o nó
+#' \code{<parametros>}, extrai os campos escalares, recodifica
+#' \code{NivelAcessoLocal}/\code{NivelAcessoGlobal} e parseia as subestruturas
+#' (\code{TipoProcedimento}, andamentos, e os arrays \code{Assuntos},
+#' \code{Interessados}, etc.).
 #'
-#' @param doc An \code{xml2::xml_document} containing the SOAP response
-#' for the operation "consultarProcedimento".
+#' @param doc Um \code{xml2::xml_document} com a resposta de "consultarProcedimento".
 #'
-#' @return A named list with elements:
-#' \itemize{
-#'   \item \code{IdProcedimento}, \code{ProcedimentoFormatado}, \code{Especificacao}, \code{DataAutuacao},
-#'         \code{LinkAcesso}, \code{NivelAcessoLocal}, \code{NivelAcessoGlobal}
-#'   \item \code{TipoProcedimento} (list)
-#'   \item \code{AndamentoGeracao}, \code{AndamentoConclusao}, \code{UltimoAndamento}
-#'   \item \code{UnidadesProcedimentoAberto} (list of sub-lists)
-#'   \item \code{Assuntos}, \code{Interessados}, \code{Observacoes},
-#'         \code{ProcedimentosRelacionados}, \code{ProcedimentosAnexados}
-#' }
+#' @return Um tibble de 1 linha. Campos escalares e subestruturas 1:1
+#'   (TipoProcedimento e andamentos) viram colunas com prefixo; arrays
+#'   (\code{Assuntos}, \code{Interessados}, \code{Observacoes},
+#'   \code{UnidadesProcedimentoAberto}, \code{ProcedimentosRelacionados},
+#'   \code{ProcedimentosAnexados}) ficam como colunas-lista de tibbles.
 #'
 #' @examples
 #' \dontrun{
-#'   resp_xml <- call_sei_api(..., method="consultarProcedimento")
-#'   result <- parse_consultar_procedimento_response(resp_xml)
-#'   str(result)
+#'   doc <- consultar_procedimento("0000000000.000001/2020-11", raw = TRUE)
+#'   parse_consultar_procedimento_response(doc)
 #' }
 #'
 #' @export
 parse_consultar_procedimento_response <- function(doc) {
 
-  # 1) Locate <consultarProcedimentoResponse><parametros> ignoring namespaces
-  node_params <- xml2::xml_find_first(
-    doc,
-    "//*[local-name()='consultarProcedimentoResponse']/*[local-name()='parametros']"
-  )
-  # if not found, try <parametros> anywhere
-  if (inherits(node_params, "xml_missing") || is.na(node_params)) {
-    node_params <- xml2::xml_find_first(doc, "//*[local-name()='parametros']")
-  }
-  if (inherits(node_params, "xml_missing") || is.na(node_params)) {
-    warning("No <parametros> node found in this XML for consultarProcedimento.")
-    return(tibble(IdTipoProcedimento = NA_character_,  Nome  = NA_character_))
+  node_params <- sei_find_parametros(doc, "consultarProcedimentoResponse")
+  if (is.null(node_params)) {
+    warning("Resposta sem elemento <parametros> paraconsultarProcedimento.")
+    return(tibble::tibble(IdProcedimento = NA_character_))
   }
 
-  # 2) Extract scalar fields
-  IdProcedimento        <- get_text(node_params, "IdProcedimento")
-  ProcedimentoFormatado <- get_text(node_params, "ProcedimentoFormatado")
-  Especificacao         <- get_text(node_params, "Especificacao")
-  DataAutuacao          <- get_text(node_params, "DataAutuacao")
-  LinkAcesso            <- get_text(node_params, "LinkAcesso")
+  # Campos escalares
+  IdProcedimento        <- get_text_child(node_params, "IdProcedimento")
+  ProcedimentoFormatado <- get_text_child(node_params, "ProcedimentoFormatado")
+  Especificacao         <- get_text_child(node_params, "Especificacao")
+  DataAutuacao          <- get_text_child(node_params, "DataAutuacao")
+  LinkAcesso            <- get_text_child(node_params, "LinkAcesso")
+  NivelAcessoLocal      <- recodify_access_level(get_text_child(node_params, "NivelAcessoLocal"))
+  NivelAcessoGlobal     <- recodify_access_level(get_text_child(node_params, "NivelAcessoGlobal"))
 
-  # 3) Access levels, recoding numeric -> text
-  raw_local  <- get_text(node_params, "NivelAcessoLocal")
-  raw_global <- get_text(node_params, "NivelAcessoGlobal")
-  NivelAcessoLocal  <- recodify_access_level(raw_local)
-  NivelAcessoGlobal <- recodify_access_level(raw_global)
+  # TipoProcedimento (1:1)
+  nd_tp <- sei_node_child(node_params, "TipoProcedimento")
+  TipoProcedimento <- parse_struct(nd_tp, c(IdTipoProcedimento = "IdTipoProcedimento",
+                                            Nome = "Nome"))
 
-  # 4) Parse <TipoProcedimento>
-  nd_tp <- xml2::xml_find_first(node_params, ".//*[local-name()='TipoProcedimento']")
-  TipoProcedimento <- tibble::tibble(IdTipoProcedimento = NA_character_,  Nome  = NA_character_)
-  if (!inherits(nd_tp, "xml_missing") && !is.na(nd_tp)) {
-    TipoProcedimento <- tibble::tibble(
-      IdTipoProcedimento = get_text(nd_tp, "IdTipoProcedimento"),
-      Nome               = get_text(nd_tp, "Nome")
-    )
-  }
+  # Andamentos (1:1)
+  AndamentoGeracao   <- parse_andamento(sei_node_child(node_params, "AndamentoGeracao"))
+  AndamentoConclusao <- parse_andamento(sei_node_child(node_params, "AndamentoConclusao"))
+  UltimoAndamento    <- parse_andamento(sei_node_child(node_params, "UltimoAndamento"))
 
-  # 5) Parse Andamentos
-  nd_ag <- xml2::xml_find_first(node_params, ".//*[local-name()='AndamentoGeracao']")
-  AndamentoGeracao <- parse_andamento(nd_ag)
+  # Arrays
+  UnidadesProcedimentoAberto <- parse_items(node_params, "UnidadesProcedimentoAberto",
+                                            parse_unidade_procedimento_aberto)
+  Assuntos                  <- parse_items(node_params, "Assuntos", parse_assunto)
+  Interessados              <- parse_items(node_params, "Interessados", parse_interessado)
+  Observacoes               <- parse_items(node_params, "Observacoes", parse_observacao)
+  ProcedimentosRelacionados <- parse_items(node_params, "ProcedimentosRelacionados",
+                                           parse_procedimento_resumido)
+  ProcedimentosAnexados     <- parse_items(node_params, "ProcedimentosAnexados",
+                                           parse_procedimento_resumido)
 
-  nd_ac <- xml2::xml_find_first(node_params, ".//*[local-name()='AndamentoConclusao']")
-  AndamentoConclusao <- parse_andamento(nd_ac)
-
-  nd_ua <- xml2::xml_find_first(node_params, ".//*[local-name()='UltimoAndamento']")
-  UltimoAndamento <- parse_andamento(nd_ua)
-
-  # 6) Arrays with <item>: UnidadesProcedimentoAberto, Assuntos, etc.
-  nd_upa_items <- xml2::xml_find_all(
-    node_params,
-    ".//*[local-name()='UnidadesProcedimentoAberto']/*[local-name()='item']"
-  )
-  UnidadesProcedimentoAberto <- map(nd_upa_items, parse_unidade_procedimento_aberto) %>%
-    bind_rows()
-
-  nd_assuntos <- xml2::xml_find_all(
-    node_params,
-    ".//*[local-name()='Assuntos']/*[local-name()='item']"
-  )
-  Assuntos <- map(nd_assuntos, parse_assunto) %>%
-    bind_rows()
-
-  nd_interessados <- xml2::xml_find_all(
-    node_params,
-    ".//*[local-name()='Interessados']/*[local-name()='item']"
-  )
-  Interessados <- map(nd_interessados, parse_interessado) %>%
-    bind_rows()
-
-  nd_obs_items <- xml2::xml_find_all(
-    node_params,
-    ".//*[local-name()='Observacoes']/*[local-name()='item']"
-  )
-  Observacoes <- map(nd_obs_items, parse_observacao) %>%
-    bind_rows()
-
-  nd_pr_rel <- xml2::xml_find_all(
-    node_params,
-    ".//*[local-name()='ProcedimentosRelacionados']/*[local-name()='item']"
-  )
-  ProcedimentosRelacionados <- map(nd_pr_rel, parse_procedimento_resumido) %>%
-    bind_rows()
-
-  nd_pr_anx <- xml2::xml_find_all(
-    node_params,
-    ".//*[local-name()='ProcedimentosAnexados']/*[local-name()='item']"
-  )
-  ProcedimentosAnexados <- map(nd_pr_anx, parse_procedimento_resumido) %>%
-    bind_rows()
-
-  # 7) Return final named list
   tibble::tibble(
     IdProcedimento             = IdProcedimento,
     ProcedimentoFormatado      = ProcedimentoFormatado,
@@ -442,7 +339,7 @@ parse_consultar_procedimento_response <- function(doc) {
     ProcedimentosRelacionados  = list(ProcedimentosRelacionados),
     ProcedimentosAnexados      = list(ProcedimentosAnexados)
   ) %>%
-    unnest(c(TipoProcedimento, AndamentoGeracao, AndamentoConclusao, UltimoAndamento),
-           names_sep = "_")
-
+    tidyr::unnest(c("TipoProcedimento", "AndamentoGeracao",
+                    "AndamentoConclusao", "UltimoAndamento"),
+                  names_sep = "_")
 }
