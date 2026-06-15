@@ -13,3 +13,6 @@ memory/
 
 # macOS
 .DS_Store
+
+# build artifacts
+*.tar.gz

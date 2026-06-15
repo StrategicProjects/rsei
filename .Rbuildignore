@@ -14,3 +14,4 @@
 ^CRAN-SUBMISSION$
 ^\.dev_.*\.R$
 ^\.dev
+\.tar\.gz$
