@@ -45,6 +45,50 @@ consultar_documento <- function(
   parse_consultar_documento_response(doc)
 }
 
+#' @title consultar_documentos
+#'
+#' @description
+#' Consulta vários documentos de uma vez e empilha os resultados em um único
+#' `tibble`. Cada documento é consultado com [consultar_documento()] e o
+#' resultado recebe uma coluna `protocolo` (o número consultado) e uma coluna
+#' `erro` (`NA` em sucesso; a mensagem caso a consulta falhe). Por padrão um
+#' documento com erro não interrompe o lote.
+#'
+#' @param protocolos Vetor de números de documento.
+#' @param config Um objeto [sei_config()].
+#' @param parar_em_erro Logical. Se `TRUE`, interrompe na primeira falha; se
+#'   `FALSE` (padrão), registra o erro na coluna `erro` e segue.
+#' @param verbose Logical. Repassado a [consultar_documento()].
+#' @param ... Demais argumentos repassados a [consultar_documento()] (ex.: os
+#'   sinalizadores `sin_retornar_*`). Não use `raw` aqui.
+#'
+#' @return Um `tibble` com uma linha por documento (colunas `protocolo` e `erro`
+#'   além das de [consultar_documento()]).
+#'
+#' @examples
+#' \dontrun{
+#'   consultar_documentos(c("0000001", "0003934"), config = sei_config())
+#' }
+#'
+#' @export
+consultar_documentos <- function(protocolos, config = sei_config(),
+                                 parar_em_erro = FALSE, verbose = FALSE, ...) {
+  protocolos <- as.character(protocolos)
+  linhas <- lapply(protocolos, function(p) {
+    res <- tryCatch(
+      do.call(consultar_documento,
+              c(list(p, config = config, verbose = verbose), list(...))),
+      error = function(e) {
+        if (isTRUE(parar_em_erro)) stop(e)
+        tibble::tibble(erro = conditionMessage(e))
+      }
+    )
+    if (!"erro" %in% names(res)) res$erro <- NA_character_
+    dplyr::bind_cols(tibble::tibble(protocolo = p), res)
+  })
+  dplyr::bind_rows(linhas)
+}
+
 #' @title consultar_publicacao
 #'
 #' @description
