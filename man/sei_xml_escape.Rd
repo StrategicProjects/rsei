@@ -13,8 +13,8 @@ sei_xml_escape(x)
 Uma string com os caracteres reservados escapados.
 }
 \description{
-Escapa os caracteres reservados de XML (\code{&}, \code{<}, \code{>},
-\code{"}, \code{'}) em um valor escalar. Usado internamente ao montar os
-parâmetros do envelope SOAP.
+Escapa os cinco caracteres reservados de XML (\code{&}, \code{<}, \code{>},
+as aspas duplas e o apóstrofo) em um valor escalar. Usado internamente ao
+montar os parâmetros do envelope SOAP.
 }
 \keyword{internal}

@@ -4,11 +4,11 @@
 \name{rsei-package}
 \alias{rsei}
 \alias{rsei-package}
-\title{rsei: Seamless Integration with the 'Sistema Eletrônico de Informações (SEI)' <https://is.gd/n5CNEj>}
+\title{rsei: Client for the 'SEI' Electronic Information System Web Services}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides an 'R'-based toolkit for interacting with the 'Sistema Eletrônico de Informações (SEI)' \url{https://is.gd/n5CNEj}, the official electronic system for document and process management used by Brazil's Federal Public Administration. This package offers end-to-end support for 'SOAP' communication with 'SEI', allowing users to create, retrieve, and manage processes and documents. Core features include utilities to build 'SOAP' envelopes, parse 'XML' responses, handle multi-part file uploads, and securely store credentials. Streamline your 'SEI' workflows with a consistent and user-friendly 'R' interface.
+Toolkit to interact with the 'SOAP' web services of the 'SEI' (Sistema Eletronico de Informacoes), the electronic system for document and process management widely used by Brazilian public administration bodies. Provides functions to build the 'SOAP' envelopes, perform the requests, handle 'SOAP' faults, and parse the 'XML' responses into data frames. Covers process and document queries, listing services, write operations (creating processes and documents, sending and signing off processes, blocks, deadlines and markers) and the permission services of the companion 'SIP' system. Note that access to the web services is restricted by the server to previously authorized network addresses.
 }
 \section{Acesso restrito por IP}{
 

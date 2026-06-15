@@ -126,6 +126,8 @@ sei_build_envelope <- function(operation, params = list(),
 #' @param config Um objeto \code{\link{sei_config}}.
 #' @param soap_action Character. Valor do cabeçalho \code{SOAPAction}.
 #' @param ns_prefix,ns_uri Namespace da operação (ver \code{\link{sei_build_envelope}}).
+#' @param timeout Numérico. Tempo máximo da requisição em segundos (padrão 60).
+#'   Se esgotado (ou em falha de conexão), a função para com mensagem clara.
 #' @param verbose Logical. Se \code{TRUE}, imprime o envelope enviado e a resposta.
 #'
 #' @return Um \code{xml2::xml_document} com a resposta SOAP.
@@ -145,18 +147,31 @@ sei_call <- function(operation,
                      soap_action = "SeiAction",
                      ns_prefix = "sei",
                      ns_uri = "Sei",
+                     timeout = 60,
                      verbose = FALSE) {
 
   envelope <- sei_build_envelope(operation, params, ns_prefix = ns_prefix, ns_uri = ns_uri)
 
-  resp <- httr2::request(config$sei_url) |>
+  req <- httr2::request(config$sei_url) |>
     httr2::req_headers(
       "Content-Type" = "text/xml; charset=UTF-8",
       "SOAPAction"   = soap_action
     ) |>
     httr2::req_body_raw(enc2utf8(envelope), type = "text/xml; charset=UTF-8") |>
-    httr2::req_error(is_error = function(resp) FALSE) |>
-    httr2::req_perform()
+    httr2::req_timeout(timeout) |>
+    httr2::req_error(is_error = function(resp) FALSE)
+
+  # Falha graciosa: erros de conexão/timeout viram uma mensagem clara em vez de
+  # travar ou propagar o erro bruto do httr2 (o acesso ao SEI é restrito por IP).
+  resp <- tryCatch(
+    httr2::req_perform(req),
+    error = function(e) {
+      stop(sprintf(
+        paste0("Nao foi possivel acessar o servico SEI em '%s' (operacao '%s'): %s. ",
+               "Verifique a conectividade e se o IP de origem esta autorizado no SEI."),
+        config$sei_url, operation, conditionMessage(e)), call. = FALSE)
+    }
+  )
 
   status   <- httr2::resp_status(resp)
   body_txt <- httr2::resp_body_string(resp)

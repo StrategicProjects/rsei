@@ -70,7 +70,7 @@ Documento(
 
 \item{IdArquivo}{Character. If using \code{adicionarArquivo} approach, reference ID.}
 
-\item{Campos}{A list of \code{\link{Campo}} objects for form fields, if any.}
+\item{Campos}{A list of \code{Campo} structures (form fields), if any.}
 
 \item{SinBloqueado}{"S" or "N". If blocked, the doc cannot be changed or removed.}
 }
