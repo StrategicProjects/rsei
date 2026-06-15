@@ -2,22 +2,26 @@
 % Please edit documentation in R/soap_helpers.R
 \name{build_parameters_xml}
 \alias{build_parameters_xml}
-\title{Build Simple XML for SOAP Parameters}
+\title{Build XML for SOAP Parameters (compatibilidade)}
 \usage{
 build_parameters_xml(params_list)
 }
 \arguments{
-\item{params_list}{A named list of parameters, e.g. \code{list(SiglaSistema = "X", IdUnidade = "123")} .}
+\item{params_list}{Lista nomeada de parâmetros, ex.:
+\code{list(SiglaSistema = "X", IdUnidade = "123")}.}
 }
 \value{
-A character string of XML that looks like:
-  \code{<SiglaSistema>X</SiglaSistema><IdUnidade>123</IdUnidade>}.
+Uma string XML dos parâmetros.
 }
 \description{
-Converts a named list (key-value pairs) to a simple XML string for inclusion
-as parameters in the SOAP body.
+Converte uma lista nomeada em XML dos parâmetros para o corpo SOAP, no formato
+do SEI (com \code{xsi:type="xsd:string"} em escalares, estruturas aninhadas e
+arrays \code{<item>}). Delega para o renderizador canônico do pacote.
 }
 \examples{
 build_parameters_xml(list(SiglaSistema = "X", IdUnidade = "123"))
 
+}
+\seealso{
+\code{\link{sei_build_envelope}}
 }

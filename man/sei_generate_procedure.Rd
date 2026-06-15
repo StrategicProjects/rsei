@@ -14,43 +14,36 @@ sei_generate_procedure(
 )
 }
 \arguments{
-\item{sei_url}{Character string. The SEI web service URL.}
+\item{sei_url}{Character. URL do Web Service do SEI.}
 
-\item{sigla_sistema}{Character string. The system name as registered in SEI.}
+\item{sigla_sistema}{Character. Sigla do sistema registrada no SEI.}
 
-\item{identificacao_servico}{Character string. The key/access code or service ID in SEI.}
+\item{identificacao_servico}{Character. Chave de acesso / id do serviço.}
 
-\item{id_unidade}{Character string. The unit ID for the request.}
+\item{id_unidade}{Character. Id da unidade.}
 
-\item{procedimento}{A named list with the structure required by SEI, e.g.:
-\code{list(
-  IdTipoProcedimento = "100000368",
-  Especificacao      = "Test procedure",
-  Observacao         = "Sample note"
-)}}
+\item{procedimento}{Lista nomeada com a estrutura \code{Procedimento}, ex.:
+\code{list(IdTipoProcedimento = "100000368", Especificacao = "Teste")}.}
 
-\item{verbose}{Logical. If \code{TRUE}, prints envelope and response.}
+\item{verbose}{Logical. Se \code{TRUE}, imprime envelope e resposta.}
 }
 \value{
-An \code{xml_document} object with the SOAP response (to be parsed).
+Um \code{xml_document} com a resposta SOAP (a ser parseada).
 }
 \description{
-Example function that wraps a call to the SEI \code{gerarProcedimento} method.
-It builds a parameters list and calls \code{\link{call_sei_api}} under the hood.
+Wrapper de exemplo para a operação \code{gerarProcedimento} do SEI. Monta a
+lista de parâmetros e chama \code{\link{sei_call}}. Operação de escrita: use
+preferencialmente em servidor de homologação/treino.
 }
 \examples{
 \dontrun{
-  proc <- list(
-    IdTipoProcedimento = "100000368",
-    Especificacao = "Test procedure",
-    Observacao = "Sample note"
-  )
   resp <- sei_generate_procedure(
-    sei_url = "http://server/sei/controlador_ws.php?servico=sei",
-    sigla_sistema = "MySystem",
-    identificacao_servico = "MyAccessKey",
+    sei_url = "https://sei4treina.pe.gov.br/sei/controlador_ws.php?servico=sei",
+    sigla_sistema = "HORTENSIAS",
+    identificacao_servico = "chave",
     id_unidade = "100000969",
-    procedimento = proc
+    procedimento = list(IdTipoProcedimento = "100000368",
+                        Especificacao = "Teste")
   )
 }
 

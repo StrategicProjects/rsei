@@ -1,0 +1,129 @@
+---
+title: "Consultando processos no SEI"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Consultando processos no SEI}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
+```
+
+O `rsei` conversa com os Web Services SOAP do SEI (Sistema Eletrônico de
+Informações) e devolve os resultados como `tibble`.
+
+> **Acesso restrito por IP.** Os Web Services do SEI só respondem a requisições
+> vindas de IPs/servidores previamente autorizados no cadastro do serviço. Os
+> exemplos abaixo só retornam dados quando executados a partir de um host
+> autorizado. Por isso, os blocos de código desta vignette não são executados.
+
+## Configuração
+
+Toda função aceita um objeto `config` criado por `sei_config()`. Os valores
+podem vir de argumentos, de `options(rsei.*)` ou de variáveis de ambiente
+(`RSEI_*`). A `IdentificacaoServico` é a chave de acesso do serviço.
+
+```{r}
+library(rsei)
+
+cfg <- sei_config(
+  sei_url               = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema         = "HORTENSIAS",
+  identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")
+)
+
+# Alternativa: fixar como padrão da sessão (dispensa passar `config`)
+sei_set_default_config(
+  sigla_sistema         = "HORTENSIAS",
+  identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")
+)
+```
+
+## Consultar um processo
+
+`consultar_procedimento()` retorna um `tibble` de uma linha. Campos escalares e
+estruturas 1:1 (tipo de processo, andamentos) viram colunas; coleções
+(assuntos, interessados, unidades onde o processo está aberto) ficam como
+*colunas-lista* de tibbles.
+
+```{r}
+proc <- consultar_procedimento("0011108545.000056/2022-49", config = cfg)
+
+proc$Especificacao
+proc$NivelAcessoGlobal            # recodificado: "público"/"restrito"/"sigiloso"
+proc$TipoProcedimento_Nome
+proc$UltimoAndamento_DataHora
+
+# colunas-lista
+proc$Assuntos[[1]]
+proc$Interessados[[1]]
+proc$UnidadesProcedimentoAberto[[1]]
+```
+
+Para obter o XML bruto (sem parse), use `raw = TRUE`:
+
+```{r}
+doc <- consultar_procedimento("0011108545.000056/2022-49", config = cfg, raw = TRUE)
+```
+
+## Consultar vários processos
+
+Como o retorno é um `tibble`, empilhar resultados é direto:
+
+```{r}
+protocolos <- c("0011108545.000056/2022-49", "0030600043.002462/2024-05")
+processos  <- purrr::map_dfr(protocolos, consultar_procedimento, config = cfg)
+```
+
+## Documentos e publicações
+
+```{r}
+doc <- consultar_documento("58769333", config = cfg)
+doc$Serie_Nome
+doc$Assinaturas[[1]]
+
+pub <- consultar_publicacao(id_documento = "67631331", config = cfg)
+```
+
+## Listagens
+
+As funções `listar_*` devolvem um `tibble` com uma linha por item.
+
+```{r}
+unidades <- listar_unidades(cfg)        # todas as unidades acessíveis ao serviço
+series   <- listar_series(cfg)
+tipos    <- listar_tipos_procedimento(cfg)
+estados  <- listar_estados(cfg)
+```
+
+## Tratamento de erros
+
+Falhas de SOAP (`SOAP Fault`) viram erros de R com a mensagem do servidor:
+
+```{r}
+tryCatch(
+  consultar_bloco("999999", config = cfg),
+  error = function(e) conditionMessage(e)
+)
+#> "SOAP Fault em 'consultarBloco' [SOAP-ENV:Client]: Unidade ... não tem acesso ..."
+```
+
+## Operações de escrita
+
+`gerar_procedimento()`, `incluir_documento()`, `enviar_processo()`,
+`lancar_andamento()` e correlatas **alteram dados** no SEI. Valide-as em
+ambiente de homologação/treino antes de usar em produção.
+
+```{r}
+novo <- gerar_procedimento(
+  Procedimento(
+    IdTipoProcedimento = "100000368",
+    Especificacao      = "Processo de teste",
+    Assuntos           = list(Assunto(CodigoEstruturado = "00.01.01"))
+  ),
+  config = cfg
+)
+novo$ProcedimentoFormatado
+```

@@ -7,26 +7,18 @@
 recodify_access_level(val)
 }
 \arguments{
-\item{val}{A character string, usually "0", "1", or "2".}
+\item{val}{Character, geralmente "0", "1" ou "2".}
 }
 \value{
-A character string: "público", "restrito", "sigiloso", or the original value.
+"público", "restrito", "sigiloso", ou o valor original.
 }
 \description{
-Converts SEI numeric access-level codes into human-readable strings:
-\itemize{
-  \item "0" -> "público"
-  \item "1" -> "restrito"
-  \item "2" -> "sigiloso"
-}
-
-If the input is missing, empty, or not in \code{c("0", "1", "2")}, it returns
-the original value.
+Converte os códigos numéricos de nível de acesso do SEI em texto:
+"0" -> "público", "1" -> "restrito", "2" -> "sigiloso". Valores ausentes,
+vazios ou fora de \code{c("0","1","2")} são devolvidos inalterados.
 }
 \examples{
 recodify_access_level("0")  # "público"
-recodify_access_level("1")  # "restrito"
 recodify_access_level("2")  # "sigiloso"
-recodify_access_level("X")  # "X"
 
 }

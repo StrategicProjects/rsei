@@ -7,17 +7,11 @@
 parse_interessado(nd_int)
 }
 \arguments{
-\item{nd_int}{An \code{xml2} node for <item> in <Interessados>.}
+\item{nd_int}{Um nó \code{xml2} de \code{<item>}.}
 }
 \value{
-A named list with \code{$Sigla} and \code{$Nome}.
+Um tibble de 1 linha com \code{Sigla} e \code{Nome}.
 }
 \description{
-Parses one <Interessado> item, extracting \code{Sigla} and \code{Nome}.
-}
-\examples{
-\dontrun{
-  parse_interessado(xml_item)
-}
-
+Parseia um \code{<item>} de \code{<Interessados>}.
 }

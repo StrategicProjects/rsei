@@ -471,7 +471,7 @@ Destinatario <- function(Sigla = NULL,
 #' @param Conteudo Character. Base64-encoded file content (required for docs).
 #' @param ConteudoMTOM Raw or base64 for large files (optional).
 #' @param IdArquivo Character. If using \code{adicionarArquivo} approach, reference ID.
-#' @param Campos A list of \code{\link{Campo}} objects for form fields, if any.
+#' @param Campos A list of \code{Campo} structures (form fields), if any.
 #' @param SinBloqueado "S" or "N". If blocked, the doc cannot be changed or removed.
 #'
 #' @return An S3 object of class "Documento".
