@@ -25,6 +25,7 @@ autenticação adicional é feita por \code{SiglaSistema} + chave de acesso
 Useful links:
 \itemize{
   \item \url{https://github.com/StrategicProjects/rsei}
+  \item \url{https://strategicprojects.github.io/rsei/}
   \item Report bugs at \url{https://github.com/StrategicProjects/rsei/issues}
 }
 

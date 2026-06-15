@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 600" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#096B72"/>
+    </marker>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #0b3d40; }
+      .sub   { font-size: 13px; fill: #4a6a6c; }
+      .layer { font-size: 12px; font-weight: 700; fill: #096B72; letter-spacing: .5px; }
+      .box   { fill: #ffffff; stroke: #096B72; stroke-width: 1.5; }
+      .boxf  { fill: #e6f3fc; stroke: #096B72; stroke-width: 1.5; }
+      .core  { fill: #096B72; }
+      .ctext { font-size: 13px; font-weight: 600; fill: #ffffff; }
+      .t     { font-size: 13px; fill: #143b3d; }
+      .tb    { font-size: 13px; font-weight: 700; fill: #0b3d40; }
+      .mono  { font-family: "JetBrains Mono", Consolas, monospace; font-size: 12px; fill: #143b3d; }
+      .edge  { stroke: #096B72; stroke-width: 1.6; fill: none; }
+      .note  { fill: #fff4e6; stroke: #d98a2b; stroke-width: 1.3; }
+      .noteT { font-size: 12px; fill: #7a4a12; font-weight: 600; }
+    </style>
+  </defs>
+
+  <text x="40" y="40" class="title">rsei — arquitetura</text>
+  <text x="40" y="60" class="sub">Cliente R para os Web Services SOAP do SEI e do SIP</text>
+
+  <!-- Layer 1: user code -->
+  <text x="40" y="92" class="layer">SEU CÓDIGO R</text>
+  <rect x="40" y="100" width="700" height="42" rx="6" class="boxf"/>
+  <text x="390" y="126" text-anchor="middle" class="tb">library(rsei)  ·  config &lt;- sei_config(...)</text>
+
+  <!-- Layer 2: high level functions -->
+  <text x="40" y="172" class="layer">FUNÇÕES DE ALTO NÍVEL  (retornam tibble)</text>
+  <rect x="40"  y="180" width="132" height="64" rx="6" class="box"/>
+  <text x="106" y="205" text-anchor="middle" class="tb">Consultas</text>
+  <text x="106" y="224" text-anchor="middle" class="mono">consultar_*</text>
+  <rect x="184" y="180" width="132" height="64" rx="6" class="box"/>
+  <text x="250" y="205" text-anchor="middle" class="tb">Listagens</text>
+  <text x="250" y="224" text-anchor="middle" class="mono">listar_*</text>
+  <rect x="328" y="180" width="132" height="64" rx="6" class="box"/>
+  <text x="394" y="205" text-anchor="middle" class="tb">Escrita</text>
+  <text x="394" y="224" text-anchor="middle" class="mono">gerar_/incluir_…</text>
+  <rect x="472" y="180" width="120" height="64" rx="6" class="box"/>
+  <text x="532" y="205" text-anchor="middle" class="tb">SIP</text>
+  <text x="532" y="224" text-anchor="middle" class="mono">*_permissao</text>
+  <rect x="604" y="180" width="136" height="64" rx="6" class="box"/>
+  <text x="672" y="201" text-anchor="middle" class="tb">Por processo</text>
+  <text x="672" y="219" text-anchor="middle" class="mono">listar_andamentos</text>
+  <text x="672" y="234" text-anchor="middle" class="mono">_completo …</text>
+
+  <!-- Layer 3: core -->
+  <text x="40" y="288" class="layer">NÚCLEO</text>
+  <rect x="40" y="296" width="210" height="48" rx="6" class="core"/>
+  <text x="145" y="318" text-anchor="middle" class="ctext">sei_build_envelope()</text>
+  <text x="145" y="335" text-anchor="middle" class="mono" fill="#dff0f1">SOAP: escalar/estrutura/array</text>
+  <rect x="266" y="296" width="210" height="48" rx="6" class="core"/>
+  <text x="371" y="318" text-anchor="middle" class="ctext">sei_call()  ·  httr2</text>
+  <text x="371" y="335" text-anchor="middle" class="mono" fill="#dff0f1">timeout · HTTP/SOAP Fault</text>
+  <rect x="492" y="296" width="248" height="48" rx="6" class="core"/>
+  <text x="616" y="318" text-anchor="middle" class="ctext">Parsers  ·  xml2 → tibble</text>
+  <text x="616" y="335" text-anchor="middle" class="mono" fill="#dff0f1">parse_* (ancorado na subárvore)</text>
+
+  <!-- Layer 4: endpoints -->
+  <text x="40" y="396" class="layer">WEB SERVICES (SOAP)</text>
+  <rect x="40" y="404" width="340" height="56" rx="6" class="boxf"/>
+  <text x="210" y="428" text-anchor="middle" class="tb">SEI — SeiWS.php</text>
+  <text x="210" y="447" text-anchor="middle" class="mono">namespace "Sei" · SiglaSistema + chave</text>
+  <rect x="400" y="404" width="340" height="56" rx="6" class="boxf"/>
+  <text x="570" y="428" text-anchor="middle" class="tb">SIP — SipWS.php</text>
+  <text x="570" y="447" text-anchor="middle" class="mono">namespace "sipns" · ChaveAcesso</text>
+
+  <!-- edges -->
+  <path class="edge" d="M390,142 L390,180" marker-end="url(#arr)"/>
+  <path class="edge" d="M390,244 L390,296" marker-end="url(#arr)"/>
+  <path class="edge" d="M210,344 L210,404" marker-end="url(#arr)"/>
+  <path class="edge" d="M570,344 L570,404" marker-end="url(#arr)"/>
+
+  <!-- firewall note -->
+  <rect x="770" y="180" width="92" height="280" rx="8" class="note"/>
+  <text x="816" y="305" text-anchor="middle" transform="rotate(90 816 320)" class="noteT">FIREWALL · acesso restrito a IPs autorizados</text>
+</svg>

@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 ![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)
+[![R-CMD-check](https://github.com/StrategicProjects/rsei/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/StrategicProjects/rsei/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/StrategicProjects/rsei/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/StrategicProjects/rsei/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 `rsei` é um toolkit em R para os Web Services SOAP do **SEI** (Sistema
@@ -25,6 +27,18 @@ serviços do **SIP** (`listar_permissao`, `replicar_permissao`,
 > não autorizado as chamadas falham por *timeout* ou conexão recusada. A
 > autenticação adicional é feita por `SiglaSistema` + chave de acesso
 > (`IdentificacaoServico`).
+
+## Arquitetura
+
+Todas as operações são wrappers finos sobre um único motor SOAP
+(`sei_build_envelope()` + `sei_call()`), com configuração centralizada
+(`sei_config()`) e parsers que devolvem `tibble`.
+
+<img src="man/figures/arquitetura.svg" width="100%" alt="Arquitetura do pacote rsei: código do usuário, funções de alto nível, núcleo SOAP e os Web Services SEI/SIP" />
+
+O fluxo de uma chamada — da função ao `tibble`, com tratamento de erro:
+
+<img src="man/figures/fluxo.svg" width="100%" alt="Fluxo de uma chamada: função, envelope, POST httr2, Web Service, tratamento de SOAP Fault e parse para tibble" />
 
 ## Instalação
 

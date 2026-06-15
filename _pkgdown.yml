@@ -1,4 +1,4 @@
-url: https://monitoramento.sepe.pe.gov.br/rsei/
+url: https://strategicprojects.github.io/rsei/
 template:
   light-switch: false
   dark-mode: false
@@ -46,3 +46,140 @@ footer:
 
 development:
   mode: auto
+
+reference:
+- title: Configuração
+  desc: Conexão, credenciais e padrões da sessão.
+  contents:
+  - sei_config
+  - sei_set_default_config
+- title: Consultas
+  desc: Consultar processos, documentos, publicações e blocos (inclui versões em lote).
+  contents:
+  - starts_with("consultar_")
+- title: Por processo
+  desc: Informações derivadas de um processo (reconstruídas a partir dos andamentos).
+  contents:
+  - listar_andamentos
+  - listar_andamentos_completo
+  - listar_documentos_processo
+  - listar_publicacoes_processo
+- title: Listagens
+  desc: Tabelas de apoio liberadas ao serviço.
+  contents:
+  - listar_unidades
+  - listar_series
+  - listar_tipos_procedimento
+  - listar_tipos_procedimento_ouvidoria
+  - listar_usuarios
+  - listar_hipoteses_legais
+  - listar_paises
+  - listar_estados
+  - listar_cidades
+  - listar_cargos
+  - listar_contatos
+  - listar_feriados
+  - listar_extensoes_permitidas
+  - listar_marcadores_unidade
+  - listar_tipos_conferencia
+- title: Escrita — processos
+  contents:
+  - gerar_procedimento
+  - sei_generate_procedure
+  - enviar_processo
+  - atribuir_processo
+  - concluir_processo
+  - reabrir_processo
+  - bloquear_processo
+  - desbloquear_processo
+  - excluir_processo
+  - anexar_processo
+  - desanexar_processo
+  - relacionar_processo
+  - remover_relacionamento_processo
+  - sobrestar_processo
+  - remover_sobrestamento_processo
+- title: Escrita — documentos, andamentos e e-mail
+  contents:
+  - incluir_documento
+  - cancelar_documento
+  - excluir_documento
+  - lancar_andamento
+  - enviar_email
+  - atualizar_contatos
+- title: Escrita — blocos
+  contents:
+  - gerar_bloco
+  - incluir_documento_bloco
+  - incluir_processo_bloco
+  - retirar_documento_bloco
+  - retirar_processo_bloco
+  - disponibilizar_bloco
+  - cancelar_disponibilizacao_bloco
+  - excluir_bloco
+- title: Escrita — prazos e marcadores
+  contents:
+  - definir_controle_prazo
+  - concluir_controle_prazo
+  - remover_controle_prazo
+  - definir_marcador
+- title: SIP — permissões
+  contents:
+  - sip_config
+  - starts_with("listar_permissao")
+  - starts_with("replicar_")
+- title: Núcleo (baixo nível)
+  desc: Motor SOAP e utilitários de requisição.
+  contents:
+  - sei_build_envelope
+  - sei_call
+  - sei_xml_escape
+  - sei_find_parametros
+  - call_sei_api
+  - build_soap_envelope
+  - build_parameters_xml
+- title: Parsers e utilitários
+  contents:
+  - starts_with("parse_")
+  - get_text
+  - recodify_access_level
+- title: Estruturas de dados (SEI)
+  desc: Construtores das estruturas do SEI.
+  contents:
+  - Andamento
+  - AndamentoMarcador
+  - ArquivoExtensao
+  - Assinatura
+  - Assunto
+  - AtributoAndamento
+  - AtributoOuvidoria
+  - Cargo
+  - Cidade
+  - Contato
+  - DefinicaoControlePrazo
+  - DefinicaoMarcador
+  - Destinatario
+  - Documento
+  - Estado
+  - Feriado
+  - HipoteseLegal
+  - Interessado
+  - Marcador
+  - Observacao
+  - Pais
+  - Procedimento
+  - ProcedimentoResumido
+  - ProtocoloBloco
+  - Publicacao
+  - PublicacaoImprensaNacional
+  - Remetente
+  - Serie
+  - TipoConferencia
+  - TipoProcedimento
+  - Unidade
+  - UnidadeProcedimentoAberto
+  - Usuario
+- title: Pacote
+  contents:
+  - rsei-package
+  - "%>%"
