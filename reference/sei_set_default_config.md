@@ -21,13 +21,14 @@ sei_set_default_config(
 
 - sei_url:
 
-  Character. SEI Web Service endpoint. Default resolves from
-  `getOption("rsei.sei_url")` / `Sys.getenv("RSEI_URL")` /
-  `"https://sei.pe.gov.br/sei/ws/SeiWS.php"`.
+  Character. SEI Web Service endpoint (required for live calls).
+  Resolves from the argument, `getOption("rsei.sei_url")` or
+  `Sys.getenv("RSEI_URL")`. There is no built-in default, so the package
+  works with any SEI installation.
 
 - sigla_sistema:
 
-  Character. System sigla registered in SEI (e.g. "HORTENSIAS").
+  Character. System sigla registered in SEI.
 
 - identificacao_servico:
 

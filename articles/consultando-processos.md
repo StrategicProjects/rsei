@@ -21,15 +21,18 @@ serviço.
 
 library(rsei)
 
+# O pacote serve a qualquer instalação do SEI: informe `sei_url` com o
+# endpoint do Web Service do seu servidor.
 cfg <- sei_config(
-  sei_url               = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
-  sigla_sistema         = "HORTENSIAS",
+  sei_url               = "https://sei.exemplo.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema         = "MEU_SISTEMA",
   identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")
 )
 
 # Alternativa: fixar como padrão da sessão (dispensa passar `config`)
 sei_set_default_config(
-  sigla_sistema         = "HORTENSIAS",
+  sei_url               = "https://sei.exemplo.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema         = "MEU_SISTEMA",
   identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")
 )
 ```

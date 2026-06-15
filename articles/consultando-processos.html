@@ -90,15 +90,18 @@ acesso do serviço.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/rsei" class="external-link">rsei</a></span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># O pacote serve a qualquer instalação do SEI: informe `sei_url` com o</span></span>
+<span><span class="co"># endpoint do Web Service do seu servidor.</span></span>
 <span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sei_config.html">sei_config</a></span><span class="op">(</span></span>
-<span>  sei_url               <span class="op">=</span> <span class="st">"https://sei.pe.gov.br/sei/ws/SeiWS.php"</span>,</span>
-<span>  sigla_sistema         <span class="op">=</span> <span class="st">"HORTENSIAS"</span>,</span>
+<span>  sei_url               <span class="op">=</span> <span class="st">"https://sei.exemplo.gov.br/sei/ws/SeiWS.php"</span>,</span>
+<span>  sigla_sistema         <span class="op">=</span> <span class="st">"MEU_SISTEMA"</span>,</span>
 <span>  identificacao_servico <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"RSEI_IDENTIFICACAO_SERVICO"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Alternativa: fixar como padrão da sessão (dispensa passar `config`)</span></span>
 <span><span class="fu"><a href="../reference/sei_set_default_config.html">sei_set_default_config</a></span><span class="op">(</span></span>
-<span>  sigla_sistema         <span class="op">=</span> <span class="st">"HORTENSIAS"</span>,</span>
+<span>  sei_url               <span class="op">=</span> <span class="st">"https://sei.exemplo.gov.br/sei/ws/SeiWS.php"</span>,</span>
+<span>  sigla_sistema         <span class="op">=</span> <span class="st">"MEU_SISTEMA"</span>,</span>
 <span>  identificacao_servico <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"RSEI_IDENTIFICACAO_SERVICO"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>

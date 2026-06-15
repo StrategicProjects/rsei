@@ -1,8 +1,9 @@
 # Configuração de conexão SIP
 
 Objeto com os dados das chamadas SIP: URL do Web Service, Chave de
-Acesso e `IdSistema`. Defaults resolvem de argumentos,
-`options(rsei.sip_*)`, variáveis `RSEI_SIP_*` e o fallback embutido.
+Acesso e `IdSistema`. Valores resolvem de argumentos,
+`options(rsei.sip_*)` e variáveis `RSEI_SIP_*`. Sem URL embutida — serve
+a qualquer instalação do SIP.
 
 ## Usage
 
@@ -14,7 +15,8 @@ sip_config(sip_url = NULL, chave_acesso = NULL, id_sistema = NULL)
 
 - sip_url:
 
-  Character. Endpoint do SIP.
+  Character. Endpoint do SIP (ex.:
+  `"https://sei.<seu-orgao>.gov.br/sip/controlador_ws.php?servico=sip"`).
 
 - chave_acesso:
 

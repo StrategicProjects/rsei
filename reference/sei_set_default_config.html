@@ -61,13 +61,14 @@ without having to pass <code>config</code> explicitly.</p>
 
 
 <dl><dt id="arg-sei-url">sei_url<a class="anchor" aria-label="anchor" href="#arg-sei-url"></a></dt>
-<dd><p>Character. SEI Web Service endpoint. Default resolves from
-<code>getOption("rsei.sei_url")</code> / <code>Sys.getenv("RSEI_URL")</code> /
-<code>"https://sei.pe.gov.br/sei/ws/SeiWS.php"</code>.</p></dd>
+<dd><p>Character. SEI Web Service endpoint (required for live calls).
+Resolves from the argument, <code>getOption("rsei.sei_url")</code> or
+<code>Sys.getenv("RSEI_URL")</code>. There is no built-in default, so the package
+works with any SEI installation.</p></dd>
 
 
 <dt id="arg-sigla-sistema">sigla_sistema<a class="anchor" aria-label="anchor" href="#arg-sigla-sistema"></a></dt>
-<dd><p>Character. System sigla registered in SEI (e.g. "HORTENSIAS").</p></dd>
+<dd><p>Character. System sigla registered in SEI.</p></dd>
 
 
 <dt id="arg-identificacao-servico">identificacao_servico<a class="anchor" aria-label="anchor" href="#arg-identificacao-servico"></a></dt>

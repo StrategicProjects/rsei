@@ -43,7 +43,7 @@ Um `xml_document` (de xml2) com a resposta SOAP.
 ``` r
 if (FALSE) { # \dontrun{
   resp_xml <- call_sei_api(
-    sei_url = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+    sei_url = "https://sei.exemplo.gov.br/sei/ws/SeiWS.php",
     method  = "listarUnidades",
     params  = list(SiglaSistema = "HORTENSIAS", IdentificacaoServico = "chave")
   )
