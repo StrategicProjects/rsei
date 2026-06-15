@@ -46,10 +46,10 @@ sei_config <- function(
       sei_url = resolve(sei_url, "rsei.sei_url", "RSEI_URL",
                         "https://sei.pe.gov.br/sei/ws/SeiWS.php"),
       sigla_sistema = resolve(sigla_sistema, "rsei.sigla_sistema",
-                              "RSEI_SIGLA_SISTEMA", "HORTENSIAS"),
+                              "RSEI_SIGLA_SISTEMA", ""),
       identificacao_servico = resolve(identificacao_servico,
                                       "rsei.identificacao_servico",
-                                      "RSEI_IDENTIFICACAO_SERVICO", "publicacao"),
+                                      "RSEI_IDENTIFICACAO_SERVICO", ""),
       id_unidade = resolve(id_unidade, "rsei.id_unidade", "RSEI_ID_UNIDADE", "")
     ),
     class = "sei_config"
