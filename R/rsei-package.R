@@ -18,7 +18,7 @@
 #' @importFrom purrr map
 #' @importFrom tibble tibble as_tibble
 #' @importFrom httr2 request req_headers req_body_raw req_perform req_error
-#'   resp_status resp_body_xml resp_body_string
+#'   req_timeout resp_status resp_body_xml resp_body_string
 #' @importFrom xml2 read_xml xml_find_first xml_find_all xml_text xml_attr
 #'   xml_name xml_children write_xml
 #' @importFrom stats setNames

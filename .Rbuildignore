@@ -6,6 +6,7 @@
 ^\.Rproj\.user$
 ^CLAUDE\.md$
 ^PLAN\.md$
+^cran-comments\.md$
 ^memory$
 ^\.claude$
 ^LICENSE\.md$

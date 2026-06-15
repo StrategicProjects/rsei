@@ -11,6 +11,7 @@ sei_call(
   soap_action = "SeiAction",
   ns_prefix = "sei",
   ns_uri = "Sei",
+  timeout = 60,
   verbose = FALSE
 )
 }
@@ -24,6 +25,9 @@ sei_call(
 \item{soap_action}{Character. Valor do cabeçalho \code{SOAPAction}.}
 
 \item{ns_prefix, ns_uri}{Namespace da operação (ver \code{\link{sei_build_envelope}}).}
+
+\item{timeout}{Numérico. Tempo máximo da requisição em segundos (padrão 60).
+Se esgotado (ou em falha de conexão), a função para com mensagem clara.}
 
 \item{verbose}{Logical. Se \code{TRUE}, imprime o envelope enviado e a resposta.}
 }
