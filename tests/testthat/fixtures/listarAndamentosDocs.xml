@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:listarAndamentosResponse>
+      <parametros SOAP-ENC:arrayType="ns1:Andamento[4]" xsi:type="ns1:ArrayOfAndamento">
+        <item xsi:type="ns1:Andamento">
+          <IdAndamento xsi:type="xsd:string">100</IdAndamento>
+          <IdTarefa xsi:type="xsd:string">1</IdTarefa>
+          <Descricao xsi:type="xsd:string">Processo gerado</Descricao>
+          <DataHora xsi:type="xsd:string">07/04/2026 10:57:35</DataHora>
+          <Unidade xsi:type="ns1:Unidade"><IdUnidade xsi:type="xsd:string">110010886</IdUnidade><Sigla xsi:type="xsd:string">SEPE - SEM</Sigla><Descricao xsi:type="xsd:string">SEM</Descricao></Unidade>
+          <Usuario xsi:type="ns1:Usuario"><IdUsuario xsi:type="xsd:string">1</IdUsuario><Sigla xsi:type="xsd:string">marcos.wasiliew</Sigla><Nome xsi:type="xsd:string">Marcos Wasiliew</Nome></Usuario>
+          <Atributos SOAP-ENC:arrayType="ns1:AtributoAndamento[0]" xsi:type="ns1:ArrayOfAtributoAndamento"/>
+        </item>
+        <item xsi:type="ns1:Andamento">
+          <IdAndamento xsi:type="xsd:string">110</IdAndamento>
+          <IdTarefa xsi:type="xsd:string">2</IdTarefa>
+          <Descricao xsi:type="xsd:string">Gerado documento restrito 84230597 (GOVPE - Nota Tecnica 1)</Descricao>
+          <DataHora xsi:type="xsd:string">07/04/2026 11:05:00</DataHora>
+          <Unidade xsi:type="ns1:Unidade"><IdUnidade xsi:type="xsd:string">110010886</IdUnidade><Sigla xsi:type="xsd:string">SEPE - SEM</Sigla><Descricao xsi:type="xsd:string">SEM</Descricao></Unidade>
+          <Usuario xsi:type="ns1:Usuario"><IdUsuario xsi:type="xsd:string">1</IdUsuario><Sigla xsi:type="xsd:string">marcos.wasiliew</Sigla><Nome xsi:type="xsd:string">Marcos Wasiliew</Nome></Usuario>
+          <Atributos SOAP-ENC:arrayType="ns1:AtributoAndamento[0]" xsi:type="ns1:ArrayOfAtributoAndamento"/>
+        </item>
+        <item xsi:type="ns1:Andamento">
+          <IdAndamento xsi:type="xsd:string">120</IdAndamento>
+          <IdTarefa xsi:type="xsd:string">5</IdTarefa>
+          <Descricao xsi:type="xsd:string">Assinado Documento 84230597 (GOVPE - Nota Tecnica 1)</Descricao>
+          <DataHora xsi:type="xsd:string">07/04/2026 11:10:00</DataHora>
+          <Unidade xsi:type="ns1:Unidade"><IdUnidade xsi:type="xsd:string">110010886</IdUnidade><Sigla xsi:type="xsd:string">SEPE - SEM</Sigla><Descricao xsi:type="xsd:string">SEM</Descricao></Unidade>
+          <Usuario xsi:type="ns1:Usuario"><IdUsuario xsi:type="xsd:string">9</IdUsuario><Sigla xsi:type="xsd:string">andreleite</Sigla><Nome xsi:type="xsd:string">Andre Leite</Nome></Usuario>
+          <Atributos SOAP-ENC:arrayType="ns1:AtributoAndamento[0]" xsi:type="ns1:ArrayOfAtributoAndamento"/>
+        </item>
+        <item xsi:type="ns1:Andamento">
+          <IdAndamento xsi:type="xsd:string">130</IdAndamento>
+          <IdTarefa xsi:type="xsd:string">2</IdTarefa>
+          <Descricao xsi:type="xsd:string">Gerado documento restrito 84245389 (GOVPE - Oficio 3)</Descricao>
+          <DataHora xsi:type="xsd:string">07/04/2026 11:45:00</DataHora>
+          <Unidade xsi:type="ns1:Unidade"><IdUnidade xsi:type="xsd:string">110010886</IdUnidade><Sigla xsi:type="xsd:string">SEPE - SEM</Sigla><Descricao xsi:type="xsd:string">SEM</Descricao></Unidade>
+          <Usuario xsi:type="ns1:Usuario"><IdUsuario xsi:type="xsd:string">1</IdUsuario><Sigla xsi:type="xsd:string">marcos.wasiliew</Sigla><Nome xsi:type="xsd:string">Marcos Wasiliew</Nome></Usuario>
+          <Atributos SOAP-ENC:arrayType="ns1:AtributoAndamento[0]" xsi:type="ns1:ArrayOfAtributoAndamento"/>
+        </item>
+      </parametros>
+    </ns1:listarAndamentosResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
