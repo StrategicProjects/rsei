@@ -308,3 +308,70 @@ listar_andamentos_completo <- function(protocolo_procedimento, config = sei_conf
   dh <- as.POSIXct(res$DataHora, format = "%d/%m/%Y %H:%M:%S", tz = "UTC")
   res[order(dh), , drop = FALSE]
 }
+
+#' @title listar_documentos_processo
+#'
+#' @description
+#' Reconstrói a lista de documentos de um processo a partir dos seus andamentos.
+#'
+#' O Web Service do SEI **não possui** uma operação nativa para listar os
+#' documentos de um processo; portanto esta função recupera a linha do tempo com
+#' [listar_andamentos_completo()] e extrai os números de documento mencionados
+#' nas descrições (ex.: "Gerado documento ... 84230597"). É uma heurística: o
+#' resultado depende do texto dos andamentos e pode não captar 100% dos casos.
+#'
+#' @param protocolo_procedimento Character. Número do processo.
+#' @param config Um objeto [sei_config()].
+#' @param consultar Logical. Se `TRUE`, consulta cada documento encontrado com
+#'   [consultar_documentos()] e anexa os detalhes (série, data, unidade
+#'   elaboradora, etc.). Faz uma chamada por documento.
+#' @param verbose Logical.
+#'
+#' @return Um `tibble` com uma linha por documento: `documento` (número),
+#'   `DataHora`/`SiglaUnidade`/`SiglaUsuario`/`NomeUsuario`/`Andamento` da
+#'   primeira menção (a geração). Com `consultar = TRUE`, inclui também as
+#'   colunas de [consultar_documento()].
+#'
+#' @examples
+#' \dontrun{
+#'   docs <- listar_documentos_processo("12.1.000000077-4", config = sei_config())
+#'   docs[, c("documento", "DataHora", "SiglaUnidade", "NomeUsuario")]
+#'
+#'   # com detalhes (série, data, etc.)
+#'   listar_documentos_processo("12.1.000000077-4", consultar = TRUE)
+#' }
+#'
+#' @export
+listar_documentos_processo <- function(protocolo_procedimento, config = sei_config(),
+                                       consultar = FALSE, verbose = FALSE) {
+  tl <- listar_andamentos_completo(protocolo_procedimento, config = config,
+                                   verbose = verbose)
+  vazio <- tibble::tibble(documento = character(0), DataHora = character(0),
+                          SiglaUnidade = character(0), SiglaUsuario = character(0),
+                          NomeUsuario = character(0), Andamento = character(0))
+  if (nrow(tl) == 0) return(vazio)
+
+  # extrai o primeiro numero (>=6 digitos) que segue a palavra "documento"
+  m   <- regmatches(tl$Descricao, regexec("[Dd]ocumento[^0-9]*([0-9]{6,})", tl$Descricao))
+  num <- vapply(m, function(x) if (length(x) >= 2) x[[2]] else NA_character_, character(1))
+  keep <- !is.na(num)
+  if (!any(keep)) return(vazio)
+
+  base <- tibble::tibble(
+    documento    = num[keep],
+    DataHora     = tl$DataHora[keep],
+    SiglaUnidade = tl$SiglaUnidade[keep],
+    SiglaUsuario = tl$SiglaUsuario[keep],
+    NomeUsuario  = tl$NomeUsuario[keep],
+    Andamento    = tl$Descricao[keep]
+  )
+  # 1a ocorrencia de cada documento (a timeline esta em ordem cronologica = geracao)
+  base <- base[!duplicated(base$documento), , drop = FALSE]
+
+  if (!isTRUE(consultar)) return(base)
+
+  det <- consultar_documentos(base$documento, config = config, verbose = verbose)
+  det <- det[match(base$documento, det$protocolo), , drop = FALSE]
+  det <- det[, setdiff(names(det), names(base)), drop = FALSE]
+  dplyr::bind_cols(base, det)
+}
