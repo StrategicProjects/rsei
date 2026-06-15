@@ -34,8 +34,11 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Hugo Vaconcelos \email{hugo.vasconcelos@ufpe.br}
+  \item Marcos Wasilew \email{marcos.wasilew@gmail.com}
+  \item Hugo Vasconcelos \email{hugo.vasconcelos@ufpe.br}
+  \item Carlos Amorin \email{carlos.agaf@ufpe.br}
   \item Diogo Bezerra \email{diogo.bezerra@ufpe.br}
+  \item Júlia Nascimento Barreto \email{juliabarreto@gd.seplag.pe.gov.br}
 }
 
 }
