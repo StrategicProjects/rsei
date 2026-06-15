@@ -134,6 +134,53 @@ consultar_publicacao <- function(
   parse_consultar_publicacao_response(doc)
 }
 
+#' @title consultar_publicacoes
+#'
+#' @description
+#' Consulta várias publicações de uma vez e empilha os resultados em um único
+#' `tibble`. Cada item é consultado com [consultar_publicacao()] usando o tipo de
+#' identificador indicado em `por`. O resultado recebe uma coluna `id` (o valor
+#' consultado) e uma coluna `erro` (`NA` em sucesso). Um item com erro não
+#' interrompe o lote (salvo `parar_em_erro = TRUE`).
+#'
+#' @param ids Vetor de identificadores.
+#' @param config Um objeto [sei_config()].
+#' @param por Tipo do identificador em `ids`: `"id_documento"` (padrão),
+#'   `"protocolo_documento"` ou `"id_publicacao"`.
+#' @param parar_em_erro Logical. Se `TRUE`, interrompe na primeira falha.
+#' @param verbose Logical.
+#'
+#' @return Um `tibble` com uma linha por item (colunas `id` e `erro` além das de
+#'   [consultar_publicacao()]).
+#'
+#' @examples
+#' \dontrun{
+#'   consultar_publicacoes(c("67631331", "67640000"), por = "id_documento")
+#' }
+#'
+#' @export
+consultar_publicacoes <- function(ids, config = sei_config(),
+                                  por = c("id_documento", "protocolo_documento",
+                                          "id_publicacao"),
+                                  parar_em_erro = FALSE, verbose = FALSE) {
+  por <- match.arg(por)
+  ids <- as.character(ids)
+  linhas <- lapply(ids, function(x) {
+    args <- list(config = config, verbose = verbose)
+    args[[por]] <- x
+    res <- tryCatch(
+      do.call(consultar_publicacao, args),
+      error = function(e) {
+        if (isTRUE(parar_em_erro)) stop(e)
+        tibble::tibble(erro = conditionMessage(e))
+      }
+    )
+    if (!"erro" %in% names(res)) res$erro <- NA_character_
+    dplyr::bind_cols(tibble::tibble(id = x), res)
+  })
+  dplyr::bind_rows(linhas)
+}
+
 #' @title consultar_bloco
 #'
 #' @description
