@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:consultarBlocoResponse>
+      <parametros xsi:type="ns1:RetornoConsultaBloco">
+        <IdBloco xsi:type="xsd:string">123</IdBloco>
+        <Unidade xsi:type="ns1:Unidade">
+          <IdUnidade xsi:type="xsd:string">110008720</IdUnidade>
+          <Sigla xsi:type="xsd:string">SEPE - RH</Sigla>
+          <Descricao xsi:type="xsd:string">SEPE - Recursos Humanos</Descricao>
+        </Unidade>
+        <Usuario xsi:type="ns1:Usuario">
+          <IdUsuario xsi:type="xsd:string">100039886</IdUsuario>
+          <Sigla xsi:type="xsd:string">fulano.silva</Sigla>
+          <Nome xsi:type="xsd:string">Fulano da Silva</Nome>
+        </Usuario>
+        <Descricao xsi:type="xsd:string">Bloco de teste</Descricao>
+        <Tipo xsi:type="xsd:string">A</Tipo>
+        <Estado xsi:type="xsd:string">A</Estado>
+        <SinPrioridade xsi:type="xsd:string">N</SinPrioridade>
+        <SinRevisao xsi:type="xsd:string">N</SinRevisao>
+        <UsuarioAtribuicao xsi:nil="true" xsi:type="ns1:Usuario"/>
+        <UnidadesDisponibilizacao SOAP-ENC:arrayType="ns1:Unidade[1]" xsi:type="ns1:ArrayOfUnidade">
+          <item xsi:type="ns1:Unidade">
+            <IdUnidade xsi:type="xsd:string">110008538</IdUnidade>
+            <Sigla xsi:type="xsd:string">SEMOBI - SEMINF</Sigla>
+            <Descricao xsi:type="xsd:string">SEMOBI - Secretaria Executiva</Descricao>
+          </item>
+        </UnidadesDisponibilizacao>
+        <Protocolos SOAP-ENC:arrayType="ns1:ProtocoloBloco[2]" xsi:type="ns1:ArrayOfProtocoloBloco">
+          <item xsi:type="ns1:ProtocoloBloco">
+            <ProtocoloFormatado xsi:type="xsd:string">0003934</ProtocoloFormatado>
+            <Identificacao xsi:type="xsd:string">Ofício</Identificacao>
+            <Assinaturas SOAP-ENC:arrayType="ns1:Assinatura[1]" xsi:type="ns1:ArrayOfAssinatura">
+              <item xsi:type="ns1:Assinatura">
+                <Nome xsi:type="xsd:string">Fulano da Silva</Nome>
+                <CargoFuncao xsi:type="xsd:string">Diretor</CargoFuncao>
+                <DataHora xsi:type="xsd:string">10/09/2024 12:00:00</DataHora>
+                <IdUsuario xsi:type="xsd:string">100039886</IdUsuario>
+                <IdOrigem xsi:type="xsd:string">1</IdOrigem>
+                <IdOrgao xsi:type="xsd:string">11</IdOrgao>
+                <Sigla xsi:type="xsd:string">fulano.silva</Sigla>
+              </item>
+            </Assinaturas>
+          </item>
+          <item xsi:type="ns1:ProtocoloBloco">
+            <ProtocoloFormatado xsi:type="xsd:string">12.1.000000077-4</ProtocoloFormatado>
+            <Identificacao xsi:type="xsd:string">Processo</Identificacao>
+            <Assinaturas SOAP-ENC:arrayType="ns1:Assinatura[0]" xsi:type="ns1:ArrayOfAssinatura"/>
+          </item>
+        </Protocolos>
+      </parametros>
+    </ns1:consultarBlocoResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

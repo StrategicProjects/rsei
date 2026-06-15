@@ -13,16 +13,16 @@ the SEI credentials in the keyring.}
 \value{
 A list containing:
 \itemize{
-  \item \code{username}: The stored username (if any).
-  \item \code{password}: The stored password or SEI access key (if any).
-  \item \code{extras}: A list of additional parameters (if any).
+\item \code{username}: The stored username (if any).
+\item \code{password}: The stored password or SEI access key (if any).
+\item \code{extras}: A list of additional parameters (if any).
 }
-Returns `NULL` if no credentials are found or if an error occurred.
+Returns \code{NULL} if no credentials are found or if an error occurred.
 }
 \description{
-Retrieves the stored SEI credentials for a given `service_name` from the `keyring`.
-If the `keyring` package is missing or if retrieval fails, the function displays a
-message instead of throwing an error, and returns `NULL`.
+Retrieves the stored SEI credentials for a given \code{service_name} from the \code{keyring}.
+If the \code{keyring} package is missing or if retrieval fails, the function displays a
+message instead of throwing an error, and returns \code{NULL}.
 }
 \examples{
 \dontrun{

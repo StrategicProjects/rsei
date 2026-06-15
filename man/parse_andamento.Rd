@@ -2,26 +2,20 @@
 % Please edit documentation in R/parse_response.R
 \name{parse_andamento}
 \alias{parse_andamento}
-\title{parse_andamento: Parse an <Andamento> Node}
+\title{parse_andamento: Parse a \code{<Andamento>} Node}
 \usage{
 parse_andamento(node_and)
 }
 \arguments{
-\item{node_and}{An \code{xml2} node that may represent an <Andamento>.}
+\item{node_and}{Um nó \code{xml2} representando um \code{<Andamento>}.}
 }
 \value{
-A named list with elements \code{$Descricao}, \code{$DataHora}, \code{$Unidade}, \code{$Usuario},
-  or \code{NULL} if not found.
+Um tibble de 1 linha com \code{Descricao}, \code{DataHora},
+\code{IdUnidade}, \code{SiglaUnidade}, \code{DescricaoUnidade},
+\code{IdUsuario}, \code{SiglaUsuario}, \code{NomeUsuario}.
 }
 \description{
-Parses an \code{<Andamento>} node (including \code{<Descricao>}, \code{<DataHora>},
-\code{<Unidade>}, \code{<Usuario>}) and returns a named list. If the node
-is missing or \code{xsi:nil="true"}, returns \code{NULL}.
-}
-\examples{
-\dontrun{
-  # Suppose you have <Andamento><Descricao>... etc ...
-  parse_andamento(xml_andamento)
-}
-
+Parseia um nó \code{<Andamento>} (\code{Descricao}, \code{DataHora}, e as
+subestruturas \code{Unidade} e \code{Usuario}) num tibble de 1 linha. Se o nó
+for ausente ou \code{xsi:nil="true"}, devolve uma linha de \code{NA}.
 }

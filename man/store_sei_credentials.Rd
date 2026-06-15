@@ -19,11 +19,11 @@ Defaults to "default_user" if not provided.}
 unit ID, etc.). These will be serialized as JSON under a separate username ("EXTRAS").}
 }
 \value{
-Invisibly returns a logical value: `TRUE` if credentials were stored successfully,
-  or `FALSE` otherwise.
+Invisibly returns a logical value: \code{TRUE} if credentials were stored successfully,
+or \code{FALSE} otherwise.
 }
 \description{
-Stores (or updates) credentials for the SEI web service in the `keyring`.
+Stores (or updates) credentials for the SEI web service in the \code{keyring}.
 If the keyring package is not installed or if the store operation fails,
 it simply displays a message instead of throwing an error.
 }

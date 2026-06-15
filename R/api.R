@@ -1,136 +1,85 @@
 # file: R/api.R
 
-library(httr2)
-library(xml2)
-
-#' @title Generic SEI SOAP Call
+#' @title Generic SEI SOAP Call (compatibilidade)
 #'
 #' @description
-#' Sends an XML SOAP request to the SEI web service. Builds the SOAP
-#' envelope with the given method and parameter list, then performs
-#' a POST request with `httr2`.
+#' Envia uma requisição SOAP para um Web Service do SEI. Mantida por
+#' compatibilidade; internamente delega para \code{\link{sei_call}}, que monta o
+#' envelope no formato correto e trata erros HTTP e \code{SOAP Fault}.
 #'
-#' @param sei_url Character string. The SEI web service URL, e.g.
-#'   \code{"http://server/sei/controlador_ws.php?servico=sei"}.
-#' @param method Character string. The SOAP method name (e.g. "gerarProcedimento").
-#' @param params A named list of parameters for the method body.
-#'   If you need more complex structures, you can build them manually.
-#' @param verbose Logical. If \code{TRUE}, prints the final envelope and response.
+#' @param sei_url Character. URL do Web Service do SEI.
+#' @param method Character. Nome da operação SOAP (ex.: "gerarProcedimento").
+#' @param params Lista nomeada de parâmetros do corpo da operação.
+#' @param verbose Logical. Se \code{TRUE}, imprime envelope e resposta.
 #'
-#' @return An \code{xml_document} (from \pkg{xml2}) representing the SOAP response.
+#' @return Um \code{xml_document} (de \pkg{xml2}) com a resposta SOAP.
 #'
 #' @examples
 #' \dontrun{
 #'   resp_xml <- call_sei_api(
-#'     sei_url = "http://server/sei/controlador_ws.php?servico=sei",
-#'     method = "gerarProcedimento",
-#'     params = list(SiglaSistema="MySys", IdUnidade="100")
+#'     sei_url = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+#'     method  = "listarUnidades",
+#'     params  = list(SiglaSistema = "HORTENSIAS", IdentificacaoServico = "chave")
 #'   )
 #' }
 #'
+#' @seealso \code{\link{sei_call}}
 #' @export
 call_sei_api <- function(sei_url, method, params = list(), verbose = FALSE) {
-  # 1) Build the inner XML for the method
-  body_xml <- build_parameters_xml(params)
-
-  # 2) Build the full SOAP envelope
-  envelope <- build_soap_envelope(method, body_xml)
-
-  # 3) Prepare and perform the request
-  resp <- request(sei_url) |>
-    req_headers(
-      "Content-Type" = "text/xml; charset=utf-8",
-      "SOAPAction"   = method  # can vary depending on server config
-    ) |>
-    req_body_raw(envelope, type = "text/xml") |>
-    req_perform()
-
-  # Check for HTTP error
-  if (resp$status_code >= 300) {
-    stop(
-      sprintf("HTTP error %d while calling '%s'. Response:\n%s",
-              resp$status_code, method, resp_body_string(resp))
-    )
-  }
-
-  # Parse the XML response
-  response_xml <- resp_body_xml(resp)
-
-  if (verbose) {
-    message("SOAP Envelope Sent:\n", envelope)
-    message("\nSOAP Response:\n", as.character(response_xml))
-  }
-
-  response_xml
+  cfg <- sei_config(sei_url = sei_url)
+  sei_call(method, params = params, config = cfg, verbose = verbose)
 }
 
 
 #' @title Generate a New Procedure (gerarProcedimento)
 #'
 #' @description
-#' Example function that wraps a call to the SEI \code{gerarProcedimento} method.
-#' It builds a parameters list and calls \code{\link{call_sei_api}} under the hood.
+#' Wrapper de exemplo para a operação \code{gerarProcedimento} do SEI. Monta a
+#' lista de parâmetros e chama \code{\link{sei_call}}. Operação de escrita: use
+#' preferencialmente em servidor de homologação/treino.
 #'
-#' @param sei_url Character string. The SEI web service URL.
-#' @param sigla_sistema Character string. The system name as registered in SEI.
-#' @param identificacao_servico Character string. The key/access code or service ID in SEI.
-#' @param id_unidade Character string. The unit ID for the request.
-#' @param procedimento A named list with the structure required by SEI, e.g.:
-#'   \code{list(
-#'     IdTipoProcedimento = "100000368",
-#'     Especificacao      = "Test procedure",
-#'     Observacao         = "Sample note"
-#'   )}
-#' @param verbose Logical. If \code{TRUE}, prints envelope and response.
+#' @param sei_url Character. URL do Web Service do SEI.
+#' @param sigla_sistema Character. Sigla do sistema registrada no SEI.
+#' @param identificacao_servico Character. Chave de acesso / id do serviço.
+#' @param id_unidade Character. Id da unidade.
+#' @param procedimento Lista nomeada com a estrutura \code{Procedimento}, ex.:
+#'   \code{list(IdTipoProcedimento = "100000368", Especificacao = "Teste")}.
+#' @param verbose Logical. Se \code{TRUE}, imprime envelope e resposta.
 #'
-#' @return An \code{xml_document} object with the SOAP response (to be parsed).
+#' @return Um \code{xml_document} com a resposta SOAP (a ser parseada).
 #'
 #' @examples
 #' \dontrun{
-#'   proc <- list(
-#'     IdTipoProcedimento = "100000368",
-#'     Especificacao = "Test procedure",
-#'     Observacao = "Sample note"
-#'   )
 #'   resp <- sei_generate_procedure(
-#'     sei_url = "http://server/sei/controlador_ws.php?servico=sei",
-#'     sigla_sistema = "MySystem",
-#'     identificacao_servico = "MyAccessKey",
+#'     sei_url = "https://sei4treina.pe.gov.br/sei/controlador_ws.php?servico=sei",
+#'     sigla_sistema = "HORTENSIAS",
+#'     identificacao_servico = "chave",
 #'     id_unidade = "100000969",
-#'     procedimento = proc
+#'     procedimento = list(IdTipoProcedimento = "100000368",
+#'                         Especificacao = "Teste")
 #'   )
 #' }
 #'
+#' @export
 sei_generate_procedure <- function(sei_url,
                                    sigla_sistema,
                                    identificacao_servico,
                                    id_unidade,
                                    procedimento = list(),
                                    verbose = FALSE) {
-  # Minimal set of params required by SEI (from documentation)
+  cfg <- sei_config(
+    sei_url               = sei_url,
+    sigla_sistema         = sigla_sistema,
+    identificacao_servico = identificacao_servico,
+    id_unidade            = id_unidade
+  )
+
   params <- list(
-    SiglaSistema         = sigla_sistema,
-    IdentificacaoServico = identificacao_servico,
-    IdUnidade            = id_unidade
+    SiglaSistema         = cfg$sigla_sistema,
+    IdentificacaoServico = cfg$identificacao_servico,
+    IdUnidade            = cfg$id_unidade,
+    Procedimento         = procedimento
   )
 
-  # The SEI expects a <Procedimento> tag containing the fields, so
-  # we can either embed them directly or create a sub-XML.
-  # For simplicity, let's just flatten it for now:
-  # e.g., "Procedimento" = <IdTipoProcedimento>...</IdTipoProcedimento>...
-
-  procedure_xml <- build_parameters_xml(procedimento)
-  # We wrap that procedure XML inside <Procedimento>...</Procedimento>
-  params[["Procedimento"]] <- sprintf("<Procedimento>%s</Procedimento>", procedure_xml)
-
-  # Call the generic SOAP function
-  resp_xml <- call_sei_api(
-    sei_url = sei_url,
-    method  = "gerarProcedimento",
-    params  = params,
-    verbose = verbose
-  )
-
-  resp_xml
+  sei_call("gerarProcedimento", params = params, config = cfg, verbose = verbose)
 }
-

@@ -7,19 +7,12 @@
 parse_unidade_procedimento_aberto(node_upa)
 }
 \arguments{
-\item{node_upa}{An \code{xml2} node for one <item> in <UnidadesProcedimentoAberto>.}
+\item{node_upa}{Um nó \code{xml2} de um \code{<item>}.}
 }
 \value{
-A named list with \code{$Unidade} and \code{$UsuarioAtribuicao}, each a sub-list
-  containing fields like \code{IdUnidade}, \code{Sigla}, \code{Descricao}.
+Um tibble de 1 linha com os campos da unidade e do usuário de atribuição.
 }
 \description{
-Parses a node presumably within \code{<UnidadesProcedimentoAberto><item>...</item></UnidadesProcedimentoAberto>},
-extracting \code{<Unidade>} and \code{<UsuarioAtribuicao>}.
-}
-\examples{
-\dontrun{
-  parse_unidade_procedimento_aberto(xml_item)
-}
-
+Parseia um \code{<item>} de \code{<UnidadesProcedimentoAberto>}, extraindo as
+subestruturas \code{Unidade} e \code{UsuarioAtribuicao}.
 }

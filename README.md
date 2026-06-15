@@ -8,45 +8,68 @@
 ![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)
 <!-- badges: end -->
 
-The goal of rsei is to …
+`rsei` é um toolkit em R para os Web Services SOAP do **SEI** (Sistema
+Eletrônico de Informações). Ele monta os envelopes SOAP no formato
+esperado pelo SEI, executa as chamadas com `httr2`, trata erros HTTP e
+*SOAP Fault*, e devolve os resultados como `tibble`. Cobre consultas
+(`consultar_*`), listagens (`listar_*`), operações de escrita
+(`gerar_procedimento`, `incluir_documento`, `enviar_processo`, …) e os
+serviços do **SIP** (`listar_permissao`, `replicar_permissao`,
+`replicar_usuario`).
 
-## Installation
+> **⚠️ Acesso restrito por IP.** Os Web Services do SEI são protegidos
+> por *firewall*: só respondem a requisições vindas de **IPs/servidores
+> previamente autorizados** no cadastro do serviço no SEI. As funções
+> deste pacote só retornarão dados quando executadas a partir de um host
+> autorizado (por exemplo, o servidor institucional). A partir de um IP
+> não autorizado as chamadas falham por *timeout* ou conexão recusada. A
+> autenticação adicional é feita por `SiglaSistema` + chave de acesso
+> (`IdentificacaoServico`).
 
-You can install the development version of rsei like so:
+## Instalação
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+# install.packages("remotes")
+remotes::install_github("StrategicProjects/rsei")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+## Configuração
 
 ``` r
 library(rsei)
-## basic example code
+
+# Configuração reutilizada por todas as funções
+cfg <- sei_config(
+  sei_url               = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema         = "HORTENSIAS",
+  identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")  # chave de acesso
+)
+
+# Opcional: definir como padrão da sessão (dispensa passar `config`)
+sei_set_default_config(
+  sigla_sistema         = "HORTENSIAS",
+  identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")
+)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## Exemplo
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+# Consultar um processo (retorna um tibble)
+proc <- consultar_procedimento("0011108545.000056/2022-49", config = cfg)
+proc$Especificacao
+proc$Assuntos[[1]]          # coluna-lista com os assuntos
+
+# Listar unidades, séries, tipos de processo, ...
+unidades <- listar_unidades(cfg)
+series   <- listar_series(cfg)
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
+As operações de **escrita** alteram dados no SEI e devem ser validadas
+em ambiente de homologação/treino antes de uso em produção.
 
-You can also embed plots, for example:
+-----
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+`rsei` faz parte de um ecossistema de pacotes R desenvolvido na
+[Secretaria Executiva de Monitoramento
+Estratégico](https://monitoramento.sepe.pe.gov.br). \`\`\`

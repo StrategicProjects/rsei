@@ -3,3 +3,13 @@
 .RData
 .Ruserdata
 docs
+
+# Claude Code / planning artifacts (não versionar)
+CLAUDE.md
+PLAN.md
+memory/
+.claude/
+.dev_*.R
+
+# macOS
+.DS_Store
