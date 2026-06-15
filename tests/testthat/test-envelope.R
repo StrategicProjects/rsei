@@ -45,10 +45,22 @@ test_that("estruturas aninhadas e arrays de <item>", {
   expect_length(items, 2)
 })
 
-test_that("sei_config resolve defaults e overrides", {
+test_that("sei_config resolve valores e e generico (sem url default)", {
   cfg <- sei_config(sigla_sistema = "ABC", identificacao_servico = "k")
   expect_s3_class(cfg, "sei_config")
   expect_equal(cfg$sigla_sistema, "ABC")
   expect_equal(cfg$identificacao_servico, "k")
-  expect_match(cfg$sei_url, "^https?://")
+  # sem URL embutida: pacote serve a qualquer instalacao do SEI
+  expect_equal(cfg$sei_url, "")
+  # url e configuravel (qualquer servidor)
+  cfg2 <- sei_config(sei_url = "https://sei.exemplo.gov.br/sei/ws/SeiWS.php")
+  expect_equal(cfg2$sei_url, "https://sei.exemplo.gov.br/sei/ws/SeiWS.php")
+})
+
+test_that("sei_call exige sei_url definido", {
+  expect_error(
+    sei_call("listarUnidades", config = sei_config(sigla_sistema = "X",
+                                                   identificacao_servico = "Y")),
+    "URL do Web Service"
+  )
 })

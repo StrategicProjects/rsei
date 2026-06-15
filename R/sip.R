@@ -11,9 +11,11 @@
 
 #' @title Configuração de conexão SIP
 #' @description Objeto com os dados das chamadas SIP: URL do Web Service,
-#'   Chave de Acesso e `IdSistema`. Defaults resolvem de argumentos,
-#'   `options(rsei.sip_*)`, variáveis `RSEI_SIP_*` e o fallback embutido.
-#' @param sip_url Character. Endpoint do SIP.
+#'   Chave de Acesso e `IdSistema`. Valores resolvem de argumentos,
+#'   `options(rsei.sip_*)` e variáveis `RSEI_SIP_*`. Sem URL embutida — serve a
+#'   qualquer instalação do SIP.
+#' @param sip_url Character. Endpoint do SIP (ex.:
+#'   `"https://sei.<seu-orgao>.gov.br/sip/controlador_ws.php?servico=sip"`).
 #' @param chave_acesso Character. Chave de Acesso do SIP.
 #' @param id_sistema Character. Id do sistema no SIP.
 #' @return Um objeto de classe `sip_config`.
@@ -29,8 +31,7 @@ sip_config <- function(sip_url = NULL, chave_acesso = NULL, id_sistema = NULL) {
   }
   structure(
     list(
-      sip_url = resolve(sip_url, "rsei.sip_url", "RSEI_SIP_URL",
-                        "https://sei.pe.gov.br/sip/controlador_ws.php?servico=sip"),
+      sip_url = resolve(sip_url, "rsei.sip_url", "RSEI_SIP_URL", ""),
       chave_acesso = resolve(chave_acesso, "rsei.sip_chave_acesso",
                              "RSEI_SIP_CHAVE_ACESSO", ""),
       id_sistema = resolve(id_sistema, "rsei.sip_id_sistema", "RSEI_SIP_ID_SISTEMA", "")

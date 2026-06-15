@@ -38,7 +38,7 @@ preferencialmente em servidor de homologação/treino.
 \examples{
 \dontrun{
   resp <- sei_generate_procedure(
-    sei_url = "https://sei4treina.pe.gov.br/sei/controlador_ws.php?servico=sei",
+    sei_url = "https://sei.exemplo.gov.br/sei/controlador_ws.php?servico=sei",
     sigla_sistema = "HORTENSIAS",
     identificacao_servico = "chave",
     id_unidade = "100000969",

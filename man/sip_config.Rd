@@ -7,7 +7,8 @@
 sip_config(sip_url = NULL, chave_acesso = NULL, id_sistema = NULL)
 }
 \arguments{
-\item{sip_url}{Character. Endpoint do SIP.}
+\item{sip_url}{Character. Endpoint do SIP (ex.:
+\code{"https://sei.<seu-orgao>.gov.br/sip/controlador_ws.php?servico=sip"}).}
 
 \item{chave_acesso}{Character. Chave de Acesso do SIP.}
 
@@ -18,6 +19,7 @@ Um objeto de classe \code{sip_config}.
 }
 \description{
 Objeto com os dados das chamadas SIP: URL do Web Service,
-Chave de Acesso e \code{IdSistema}. Defaults resolvem de argumentos,
-\verb{options(rsei.sip_*)}, variáveis \verb{RSEI_SIP_*} e o fallback embutido.
+Chave de Acesso e \code{IdSistema}. Valores resolvem de argumentos,
+\verb{options(rsei.sip_*)} e variáveis \verb{RSEI_SIP_*}. Sem URL embutida — serve a
+qualquer instalação do SIP.
 }

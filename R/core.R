@@ -150,6 +150,13 @@ sei_call <- function(operation,
                      timeout = 60,
                      verbose = FALSE) {
 
+  if (is.null(config$sei_url) || !nzchar(config$sei_url)) {
+    stop(paste0("URL do Web Service do SEI nao definida. Informe `sei_url` em ",
+                "sei_config() (ex.: 'https://sei.<seu-orgao>.gov.br/sei/ws/SeiWS.php'), ",
+                "ou defina options(rsei.sei_url=) / a variavel de ambiente RSEI_URL."),
+         call. = FALSE)
+  }
+
   envelope <- sei_build_envelope(operation, params, ns_prefix = ns_prefix, ns_uri = ns_uri)
 
   req <- httr2::request(config$sei_url) |>

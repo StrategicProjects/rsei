@@ -12,11 +12,12 @@ sei_config(
 )
 }
 \arguments{
-\item{sei_url}{Character. SEI Web Service endpoint. Default resolves from
-\code{getOption("rsei.sei_url")} / \code{Sys.getenv("RSEI_URL")} /
-\code{"https://sei.pe.gov.br/sei/ws/SeiWS.php"}.}
+\item{sei_url}{Character. SEI Web Service endpoint (required for live calls).
+Resolves from the argument, \code{getOption("rsei.sei_url")} or
+\code{Sys.getenv("RSEI_URL")}. There is no built-in default, so the package
+works with any SEI installation.}
 
-\item{sigla_sistema}{Character. System sigla registered in SEI (e.g. "HORTENSIAS").}
+\item{sigla_sistema}{Character. System sigla registered in SEI.}
 
 \item{identificacao_servico}{Character. Service access key (\emph{chave de acesso}).}
 
@@ -31,12 +32,20 @@ An object of class \code{"sei_config"}: a named list with
 Builds a configuration object holding the values that every SEI Web Service
 call needs: the endpoint URL, the system sigla (\code{SiglaSistema}), the
 service access key (\code{IdentificacaoServico}) and the default unit id
-(\code{IdUnidade}). Defaults are resolved, in order, from the arguments,
-\code{options(rsei.*)}, environment variables (\code{RSEI_*}) and finally
-the built-in fallbacks.
+(\code{IdUnidade}). Values are resolved, in order, from the arguments,
+\code{options(rsei.*)} and environment variables (\code{RSEI_*}).
+
+The package is not tied to any particular SEI installation: set \code{sei_url}
+to the Web Service endpoint of your own SEI server, e.g.
+\code{"https://sei.<your-org>.gov.br/sei/ws/SeiWS.php"} (or the
+\code{controlador_ws.php?servico=sei} form).
 }
 \examples{
-cfg <- sei_config(sigla_sistema = "HORTENSIAS", identificacao_servico = "minha-chave")
+cfg <- sei_config(
+  sei_url = "https://sei.exemplo.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema = "MEU_SISTEMA",
+  identificacao_servico = "minha-chave"
+)
 cfg$sei_url
 
 }

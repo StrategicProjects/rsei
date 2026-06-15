@@ -22,7 +22,7 @@ Description: Toolkit to interact with the 'SOAP' web services of the
 License: GPL-3
 Encoding: UTF-8
 Language: pt-BR
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.1.0)
 Imports:
     httr2,
     xml2,

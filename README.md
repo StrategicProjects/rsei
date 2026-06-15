@@ -53,15 +53,18 @@ remotes::install_github("StrategicProjects/rsei")
 library(rsei)
 
 # Configuração reutilizada por todas as funções
+# Funciona com qualquer instalação do SEI: aponte `sei_url` para o
+# endpoint do Web Service do seu servidor.
 cfg <- sei_config(
-  sei_url               = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
-  sigla_sistema         = "HORTENSIAS",
+  sei_url               = "https://sei.<seu-orgao>.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema         = "MEU_SISTEMA",
   identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")  # chave de acesso
 )
 
 # Opcional: definir como padrão da sessão (dispensa passar `config`)
 sei_set_default_config(
-  sigla_sistema         = "HORTENSIAS",
+  sei_url               = "https://sei.<seu-orgao>.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema         = "MEU_SISTEMA",
   identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")
 )
 ```

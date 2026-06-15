@@ -26,7 +26,7 @@ envelope no formato correto e trata erros HTTP e \code{SOAP Fault}.
 \examples{
 \dontrun{
   resp_xml <- call_sei_api(
-    sei_url = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+    sei_url = "https://sei.exemplo.gov.br/sei/ws/SeiWS.php",
     method  = "listarUnidades",
     params  = list(SiglaSistema = "HORTENSIAS", IdentificacaoServico = "chave")
   )

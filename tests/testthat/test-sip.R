@@ -7,11 +7,13 @@ test_that("envelope SIP usa namespace sipns", {
   expect_s3_class(xml2::read_xml(env), "xml_document")
 })
 
-test_that("sip_config resolve defaults", {
+test_that("sip_config resolve valores e e generico (sem url default)", {
   cfg <- sip_config(chave_acesso = "abc", id_sistema = "100")
   expect_s3_class(cfg, "sip_config")
   expect_equal(cfg$chave_acesso, "abc")
-  expect_match(cfg$sip_url, "sip")
+  expect_equal(cfg$sip_url, "")   # sem URL embutida: serve a qualquer SIP
+  cfg2 <- sip_config(sip_url = "https://sei.exemplo.gov.br/sip/controlador_ws.php?servico=sip")
+  expect_match(cfg2$sip_url, "sip")
 })
 
 test_that("listar_permissao monta ChaveAcesso/IdSistema e usa ns/soapAction SIP", {

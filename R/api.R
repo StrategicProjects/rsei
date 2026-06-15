@@ -17,7 +17,7 @@
 #' @examples
 #' \dontrun{
 #'   resp_xml <- call_sei_api(
-#'     sei_url = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+#'     sei_url = "https://sei.exemplo.gov.br/sei/ws/SeiWS.php",
 #'     method  = "listarUnidades",
 #'     params  = list(SiglaSistema = "HORTENSIAS", IdentificacaoServico = "chave")
 #'   )
@@ -51,7 +51,7 @@ call_sei_api <- function(sei_url, method, params = list(), verbose = FALSE) {
 #' @examples
 #' \dontrun{
 #'   resp <- sei_generate_procedure(
-#'     sei_url = "https://sei4treina.pe.gov.br/sei/controlador_ws.php?servico=sei",
+#'     sei_url = "https://sei.exemplo.gov.br/sei/controlador_ws.php?servico=sei",
 #'     sigla_sistema = "HORTENSIAS",
 #'     identificacao_servico = "chave",
 #'     id_unidade = "100000969",

@@ -12,11 +12,12 @@ sei_set_default_config(
 )
 }
 \arguments{
-\item{sei_url}{Character. SEI Web Service endpoint. Default resolves from
-\code{getOption("rsei.sei_url")} / \code{Sys.getenv("RSEI_URL")} /
-\code{"https://sei.pe.gov.br/sei/ws/SeiWS.php"}.}
+\item{sei_url}{Character. SEI Web Service endpoint (required for live calls).
+Resolves from the argument, \code{getOption("rsei.sei_url")} or
+\code{Sys.getenv("RSEI_URL")}. There is no built-in default, so the package
+works with any SEI installation.}
 
-\item{sigla_sistema}{Character. System sigla registered in SEI (e.g. "HORTENSIAS").}
+\item{sigla_sistema}{Character. System sigla registered in SEI.}
 
 \item{identificacao_servico}{Character. Service access key (\emph{chave de acesso}).}
 
