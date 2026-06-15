@@ -1,0 +1,501 @@
+# rsei (R + SEI)
+
+`rsei` é um toolkit em R para os Web Services SOAP do **SEI** (Sistema
+Eletrônico de Informações). Ele monta os envelopes SOAP no formato
+esperado pelo SEI, executa as chamadas com `httr2`, trata erros HTTP e
+*SOAP Fault*, e devolve os resultados como `tibble`. Cobre consultas
+(`consultar_*`), listagens (`listar_*`), operações de escrita
+(`gerar_procedimento`, `incluir_documento`, `enviar_processo`, …) e os
+serviços do **SIP** (`listar_permissao`, `replicar_permissao`,
+`replicar_usuario`).
+
+> **⚠️ Acesso restrito por IP.** Os Web Services do SEI são protegidos
+> por *firewall*: só respondem a requisições vindas de **IPs/servidores
+> previamente autorizados** no cadastro do serviço no SEI. As funções
+> deste pacote só retornarão dados quando executadas a partir de um host
+> autorizado (por exemplo, o servidor institucional). A partir de um IP
+> não autorizado as chamadas falham por *timeout* ou conexão recusada. A
+> autenticação adicional é feita por `SiglaSistema` + chave de acesso
+> (`IdentificacaoServico`).
+
+## Arquitetura
+
+Todas as operações são wrappers finos sobre um único motor SOAP
+([`sei_build_envelope()`](https://strategicprojects.github.io/rsei/reference/sei_build_envelope.md) +
+[`sei_call()`](https://strategicprojects.github.io/rsei/reference/sei_call.md)),
+com configuração centralizada
+([`sei_config()`](https://strategicprojects.github.io/rsei/reference/sei_config.md))
+e parsers que devolvem `tibble`.
+
+![Arquitetura do pacote rsei: código do usuário, funções de alto nível,
+núcleo SOAP e os Web Services
+SEI/SIP](reference/figures/arquitetura.svg)
+
+O fluxo de uma chamada — da função ao `tibble`, com tratamento de erro:
+
+![Fluxo de uma chamada: função, envelope, POST httr2, Web Service,
+tratamento de SOAP Fault e parse para
+tibble](reference/figures/fluxo.svg)
+
+## Instalação
+
+``` r
+
+# install.packages("remotes")
+remotes::install_github("StrategicProjects/rsei")
+```
+
+## Configuração
+
+``` r
+
+library(rsei)
+
+# Configuração reutilizada por todas as funções
+cfg <- sei_config(
+  sei_url               = "https://sei.pe.gov.br/sei/ws/SeiWS.php",
+  sigla_sistema         = "HORTENSIAS",
+  identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")  # chave de acesso
+)
+
+# Opcional: definir como padrão da sessão (dispensa passar `config`)
+sei_set_default_config(
+  sigla_sistema         = "HORTENSIAS",
+  identificacao_servico = Sys.getenv("RSEI_IDENTIFICACAO_SERVICO")
+)
+```
+
+## Exemplo
+
+``` r
+
+# Consultar um processo (retorna um tibble)
+proc <- consultar_procedimento("0011108545.000056/2022-49", config = cfg)
+proc$Especificacao
+proc$Assuntos[[1]]          # coluna-lista com os assuntos
+
+# Listar unidades, séries, tipos de processo, ...
+unidades <- listar_unidades(cfg)
+series   <- listar_series(cfg)
+```
+
+As operações de **escrita** alteram dados no SEI e devem ser validadas
+em ambiente de homologação/treino antes de uso em produção.
+
+------------------------------------------------------------------------
+
+`rsei` faz parte de um ecossistema de pacotes R desenvolvido na
+[Secretaria Executiva de Monitoramento
+Estratégico](https://monitoramento.sepe.pe.gov.br). \`\`\`
+
+# Package index
+
+## Configuração
+
+Conexão, credenciais e padrões da sessão.
+
+- [`sei_config()`](https://strategicprojects.github.io/rsei/reference/sei_config.md)
+  : SEI Connection Configuration
+- [`sei_set_default_config()`](https://strategicprojects.github.io/rsei/reference/sei_set_default_config.md)
+  : Set Default SEI Configuration for the Session
+- [`store_sei_credentials()`](https://strategicprojects.github.io/rsei/reference/store_sei_credentials.md)
+  : Store SEI Credentials in Keyring
+- [`get_sei_credentials()`](https://strategicprojects.github.io/rsei/reference/get_sei_credentials.md)
+  : Retrieve SEI Credentials from Keyring
+
+## Consultas
+
+Consultar processos, documentos, publicações e blocos (inclui versões em
+lote).
+
+- [`consultar_bloco()`](https://strategicprojects.github.io/rsei/reference/consultar_bloco.md)
+  : consultar_bloco
+- [`consultar_documento()`](https://strategicprojects.github.io/rsei/reference/consultar_documento.md)
+  : consultar_documento
+- [`consultar_documentos()`](https://strategicprojects.github.io/rsei/reference/consultar_documentos.md)
+  : consultar_documentos
+- [`consultar_procedimento()`](https://strategicprojects.github.io/rsei/reference/consultar_procedimento.md)
+  : consultar_procedimento
+- [`consultar_procedimento_individual()`](https://strategicprojects.github.io/rsei/reference/consultar_procedimento_individual.md)
+  : consultar_procedimento_individual
+- [`consultar_procedimentos()`](https://strategicprojects.github.io/rsei/reference/consultar_procedimentos.md)
+  : consultar_procedimentos
+- [`consultar_publicacao()`](https://strategicprojects.github.io/rsei/reference/consultar_publicacao.md)
+  : consultar_publicacao
+- [`consultar_publicacoes()`](https://strategicprojects.github.io/rsei/reference/consultar_publicacoes.md)
+  : consultar_publicacoes
+
+## Por processo
+
+Informações derivadas de um processo (reconstruídas a partir dos
+andamentos).
+
+- [`listar_andamentos()`](https://strategicprojects.github.io/rsei/reference/listar_andamentos.md)
+  : listar_andamentos
+- [`listar_andamentos_completo()`](https://strategicprojects.github.io/rsei/reference/listar_andamentos_completo.md)
+  : listar_andamentos_completo
+- [`listar_documentos_processo()`](https://strategicprojects.github.io/rsei/reference/listar_documentos_processo.md)
+  : listar_documentos_processo
+- [`listar_publicacoes_processo()`](https://strategicprojects.github.io/rsei/reference/listar_publicacoes_processo.md)
+  : listar_publicacoes_processo
+
+## Listagens
+
+Tabelas de apoio liberadas ao serviço.
+
+- [`listar_unidades()`](https://strategicprojects.github.io/rsei/reference/listar_unidades.md)
+  : listar_unidades
+- [`listar_series()`](https://strategicprojects.github.io/rsei/reference/listar_series.md)
+  : listar_series
+- [`listar_tipos_procedimento()`](https://strategicprojects.github.io/rsei/reference/listar_tipos_procedimento.md)
+  : listar_tipos_procedimento
+- [`listar_tipos_procedimento_ouvidoria()`](https://strategicprojects.github.io/rsei/reference/listar_tipos_procedimento_ouvidoria.md)
+  : listar_tipos_procedimento_ouvidoria
+- [`listar_usuarios()`](https://strategicprojects.github.io/rsei/reference/listar_usuarios.md)
+  : listar_usuarios
+- [`listar_hipoteses_legais()`](https://strategicprojects.github.io/rsei/reference/listar_hipoteses_legais.md)
+  : listar_hipoteses_legais
+- [`listar_paises()`](https://strategicprojects.github.io/rsei/reference/listar_paises.md)
+  : listar_paises
+- [`listar_estados()`](https://strategicprojects.github.io/rsei/reference/listar_estados.md)
+  : listar_estados
+- [`listar_cidades()`](https://strategicprojects.github.io/rsei/reference/listar_cidades.md)
+  : listar_cidades
+- [`listar_cargos()`](https://strategicprojects.github.io/rsei/reference/listar_cargos.md)
+  : listar_cargos
+- [`listar_contatos()`](https://strategicprojects.github.io/rsei/reference/listar_contatos.md)
+  : listar_contatos
+- [`listar_feriados()`](https://strategicprojects.github.io/rsei/reference/listar_feriados.md)
+  : listar_feriados
+- [`listar_extensoes_permitidas()`](https://strategicprojects.github.io/rsei/reference/listar_extensoes_permitidas.md)
+  : listar_extensoes_permitidas
+- [`listar_marcadores_unidade()`](https://strategicprojects.github.io/rsei/reference/listar_marcadores_unidade.md)
+  : listar_marcadores_unidade
+- [`listar_tipos_conferencia()`](https://strategicprojects.github.io/rsei/reference/listar_tipos_conferencia.md)
+  : listar_tipos_conferencia
+
+## Escrita — processos
+
+- [`gerar_procedimento()`](https://strategicprojects.github.io/rsei/reference/gerar_procedimento.md)
+  : gerar_procedimento
+- [`sei_generate_procedure()`](https://strategicprojects.github.io/rsei/reference/sei_generate_procedure.md)
+  : Generate a New Procedure (gerarProcedimento)
+- [`enviar_processo()`](https://strategicprojects.github.io/rsei/reference/enviar_processo.md)
+  : enviar_processo
+- [`atribuir_processo()`](https://strategicprojects.github.io/rsei/reference/atribuir_processo.md)
+  : atribuir_processo
+- [`concluir_processo()`](https://strategicprojects.github.io/rsei/reference/concluir_processo.md)
+  : concluir_processo
+- [`reabrir_processo()`](https://strategicprojects.github.io/rsei/reference/reabrir_processo.md)
+  : reabrir_processo
+- [`bloquear_processo()`](https://strategicprojects.github.io/rsei/reference/bloquear_processo.md)
+  : bloquear_processo
+- [`desbloquear_processo()`](https://strategicprojects.github.io/rsei/reference/desbloquear_processo.md)
+  : desbloquear_processo
+- [`excluir_processo()`](https://strategicprojects.github.io/rsei/reference/excluir_processo.md)
+  : excluir_processo
+- [`anexar_processo()`](https://strategicprojects.github.io/rsei/reference/anexar_processo.md)
+  : anexar_processo
+- [`desanexar_processo()`](https://strategicprojects.github.io/rsei/reference/desanexar_processo.md)
+  : desanexar_processo
+- [`relacionar_processo()`](https://strategicprojects.github.io/rsei/reference/relacionar_processo.md)
+  : relacionar_processo
+- [`remover_relacionamento_processo()`](https://strategicprojects.github.io/rsei/reference/remover_relacionamento_processo.md)
+  : remover_relacionamento_processo
+- [`sobrestar_processo()`](https://strategicprojects.github.io/rsei/reference/sobrestar_processo.md)
+  : sobrestar_processo
+- [`remover_sobrestamento_processo()`](https://strategicprojects.github.io/rsei/reference/remover_sobrestamento_processo.md)
+  : remover_sobrestamento_processo
+
+## Escrita — documentos, andamentos e e-mail
+
+- [`incluir_documento()`](https://strategicprojects.github.io/rsei/reference/incluir_documento.md)
+  : incluir_documento
+- [`cancelar_documento()`](https://strategicprojects.github.io/rsei/reference/cancelar_documento.md)
+  : cancelar_documento
+- [`excluir_documento()`](https://strategicprojects.github.io/rsei/reference/excluir_documento.md)
+  : excluir_documento
+- [`lancar_andamento()`](https://strategicprojects.github.io/rsei/reference/lancar_andamento.md)
+  : lancar_andamento
+- [`enviar_email()`](https://strategicprojects.github.io/rsei/reference/enviar_email.md)
+  : enviar_email
+- [`atualizar_contatos()`](https://strategicprojects.github.io/rsei/reference/atualizar_contatos.md)
+  : atualizar_contatos
+
+## Escrita — blocos
+
+- [`gerar_bloco()`](https://strategicprojects.github.io/rsei/reference/gerar_bloco.md)
+  : gerar_bloco
+- [`incluir_documento_bloco()`](https://strategicprojects.github.io/rsei/reference/incluir_documento_bloco.md)
+  : incluir_documento_bloco
+- [`incluir_processo_bloco()`](https://strategicprojects.github.io/rsei/reference/incluir_processo_bloco.md)
+  : incluir_processo_bloco
+- [`retirar_documento_bloco()`](https://strategicprojects.github.io/rsei/reference/retirar_documento_bloco.md)
+  : retirar_documento_bloco
+- [`retirar_processo_bloco()`](https://strategicprojects.github.io/rsei/reference/retirar_processo_bloco.md)
+  : retirar_processo_bloco
+- [`disponibilizar_bloco()`](https://strategicprojects.github.io/rsei/reference/disponibilizar_bloco.md)
+  : disponibilizar_bloco
+- [`cancelar_disponibilizacao_bloco()`](https://strategicprojects.github.io/rsei/reference/cancelar_disponibilizacao_bloco.md)
+  : cancelar_disponibilizacao_bloco
+- [`excluir_bloco()`](https://strategicprojects.github.io/rsei/reference/excluir_bloco.md)
+  : excluir_bloco
+
+## Escrita — prazos e marcadores
+
+- [`definir_controle_prazo()`](https://strategicprojects.github.io/rsei/reference/definir_controle_prazo.md)
+  : definir_controle_prazo
+- [`concluir_controle_prazo()`](https://strategicprojects.github.io/rsei/reference/concluir_controle_prazo.md)
+  : concluir_controle_prazo
+- [`remover_controle_prazo()`](https://strategicprojects.github.io/rsei/reference/remover_controle_prazo.md)
+  : remover_controle_prazo
+- [`definir_marcador()`](https://strategicprojects.github.io/rsei/reference/definir_marcador.md)
+  : definir_marcador
+
+## SIP — permissões
+
+- [`sip_config()`](https://strategicprojects.github.io/rsei/reference/sip_config.md)
+  : Configuração de conexão SIP
+- [`sip_call()`](https://strategicprojects.github.io/rsei/reference/sip_call.md)
+  : Chamada genérica a um Web Service do SIP
+- [`listar_permissao()`](https://strategicprojects.github.io/rsei/reference/listar_permissao.md)
+  : listar_permissao
+- [`replicar_permissao()`](https://strategicprojects.github.io/rsei/reference/replicar_permissao.md)
+  : replicar_permissao
+- [`replicar_usuario()`](https://strategicprojects.github.io/rsei/reference/replicar_usuario.md)
+  : replicar_usuario
+
+## Núcleo (baixo nível)
+
+Motor SOAP e utilitários de requisição.
+
+- [`sei_build_envelope()`](https://strategicprojects.github.io/rsei/reference/sei_build_envelope.md)
+  : Monta o Envelope SOAP do SEI
+
+- [`sei_call()`](https://strategicprojects.github.io/rsei/reference/sei_call.md)
+  : Chamada Genérica a um Web Service do SEI
+
+- [`sei_xml_escape()`](https://strategicprojects.github.io/rsei/reference/sei_xml_escape.md)
+  : Escape de texto para XML
+
+- [`sei_find_parametros()`](https://strategicprojects.github.io/rsei/reference/sei_find_parametros.md)
+  :
+
+  Localiza o nó `<parametros>` da Resposta
+
+- [`call_sei_api()`](https://strategicprojects.github.io/rsei/reference/call_sei_api.md)
+  : Generic SEI SOAP Call (compatibilidade)
+
+- [`build_soap_envelope()`](https://strategicprojects.github.io/rsei/reference/build_soap_envelope.md)
+  : Build a SOAP Envelope (compatibilidade)
+
+- [`build_parameters_xml()`](https://strategicprojects.github.io/rsei/reference/build_parameters_xml.md)
+  : Build XML for SOAP Parameters (compatibilidade)
+
+## Parsers e utilitários
+
+- [`parse_andamento()`](https://strategicprojects.github.io/rsei/reference/parse_andamento.md)
+  :
+
+  parse_andamento: Parse a `<Andamento>` Node
+
+- [`parse_andamento_item()`](https://strategicprojects.github.io/rsei/reference/parse_andamento_item.md)
+  : parse_andamento_item
+
+- [`parse_andamento_response()`](https://strategicprojects.github.io/rsei/reference/parse_andamento_response.md)
+  : parse_andamento_response
+
+- [`parse_arquivo_extensao()`](https://strategicprojects.github.io/rsei/reference/parse_arquivo_extensao.md)
+  : parse_arquivo_extensao
+
+- [`parse_assinatura()`](https://strategicprojects.github.io/rsei/reference/parse_assinatura.md)
+  : parse_assinatura
+
+- [`parse_assunto()`](https://strategicprojects.github.io/rsei/reference/parse_assunto.md)
+  : parse_assunto
+
+- [`parse_campo()`](https://strategicprojects.github.io/rsei/reference/parse_campo.md)
+  : parse_campo
+
+- [`parse_cargo()`](https://strategicprojects.github.io/rsei/reference/parse_cargo.md)
+  : parse_cargo
+
+- [`parse_cidade()`](https://strategicprojects.github.io/rsei/reference/parse_cidade.md)
+  : parse_cidade
+
+- [`parse_consultar_bloco_response()`](https://strategicprojects.github.io/rsei/reference/parse_consultar_bloco_response.md)
+  : parse_consultar_bloco_response
+
+- [`parse_consultar_documento_response()`](https://strategicprojects.github.io/rsei/reference/parse_consultar_documento_response.md)
+  : parse_consultar_documento_response
+
+- [`parse_consultar_procedimento_individual_response()`](https://strategicprojects.github.io/rsei/reference/parse_consultar_procedimento_individual_response.md)
+  : parse_consultar_procedimento_individual_response
+
+- [`parse_consultar_procedimento_response()`](https://strategicprojects.github.io/rsei/reference/parse_consultar_procedimento_response.md)
+  : parse_consultar_procedimento_response
+
+- [`parse_consultar_publicacao_response()`](https://strategicprojects.github.io/rsei/reference/parse_consultar_publicacao_response.md)
+  : parse_consultar_publicacao_response
+
+- [`parse_contato()`](https://strategicprojects.github.io/rsei/reference/parse_contato.md)
+  : parse_contato
+
+- [`parse_estado()`](https://strategicprojects.github.io/rsei/reference/parse_estado.md)
+  : parse_estado
+
+- [`parse_feriado()`](https://strategicprojects.github.io/rsei/reference/parse_feriado.md)
+  : parse_feriado
+
+- [`parse_hipotese_legal()`](https://strategicprojects.github.io/rsei/reference/parse_hipotese_legal.md)
+  : parse_hipotese_legal
+
+- [`parse_imprensa_nacional()`](https://strategicprojects.github.io/rsei/reference/parse_imprensa_nacional.md)
+  : parse_imprensa_nacional
+
+- [`parse_interessado()`](https://strategicprojects.github.io/rsei/reference/parse_interessado.md)
+  : parse_interessado
+
+- [`parse_list_response()`](https://strategicprojects.github.io/rsei/reference/parse_list_response.md)
+  : parse_list_response
+
+- [`parse_marcador()`](https://strategicprojects.github.io/rsei/reference/parse_marcador.md)
+  : parse_marcador
+
+- [`parse_observacao()`](https://strategicprojects.github.io/rsei/reference/parse_observacao.md)
+  : parse_observacao
+
+- [`parse_pais()`](https://strategicprojects.github.io/rsei/reference/parse_pais.md)
+  : parse_pais
+
+- [`parse_permissao()`](https://strategicprojects.github.io/rsei/reference/parse_permissao.md)
+  : parse_permissao
+
+- [`parse_procedimento_resumido()`](https://strategicprojects.github.io/rsei/reference/parse_procedimento_resumido.md)
+  : parse_procedimento_resumido
+
+- [`parse_protocolo_bloco()`](https://strategicprojects.github.io/rsei/reference/parse_protocolo_bloco.md)
+  : parse_protocolo_bloco
+
+- [`parse_publicacao()`](https://strategicprojects.github.io/rsei/reference/parse_publicacao.md)
+  : parse_publicacao
+
+- [`parse_retorno_envio_email()`](https://strategicprojects.github.io/rsei/reference/parse_retorno_envio_email.md)
+  : parse_retorno_envio_email
+
+- [`parse_retorno_geracao_procedimento()`](https://strategicprojects.github.io/rsei/reference/parse_retorno_geracao_procedimento.md)
+  : parse_retorno_geracao_procedimento
+
+- [`parse_retorno_inclusao_documento()`](https://strategicprojects.github.io/rsei/reference/parse_retorno_inclusao_documento.md)
+  : parse_retorno_inclusao_documento
+
+- [`parse_serie()`](https://strategicprojects.github.io/rsei/reference/parse_serie.md)
+  : parse_serie
+
+- [`parse_tipo_conferencia()`](https://strategicprojects.github.io/rsei/reference/parse_tipo_conferencia.md)
+  : parse_tipo_conferencia
+
+- [`parse_tipo_procedimento()`](https://strategicprojects.github.io/rsei/reference/parse_tipo_procedimento.md)
+  : parse_tipo_procedimento
+
+- [`parse_unidade()`](https://strategicprojects.github.io/rsei/reference/parse_unidade.md)
+  : parse_unidade
+
+- [`parse_unidade_procedimento_aberto()`](https://strategicprojects.github.io/rsei/reference/parse_unidade_procedimento_aberto.md)
+  : parse_unidade_procedimento_aberto
+
+- [`parse_usuario()`](https://strategicprojects.github.io/rsei/reference/parse_usuario.md)
+  : parse_usuario
+
+- [`get_text()`](https://strategicprojects.github.io/rsei/reference/get_text.md)
+  : get_text: texto de um descendente por local-name
+
+- [`recodify_access_level()`](https://strategicprojects.github.io/rsei/reference/recodify_access_level.md)
+  : Recodify SEI Access Level
+
+## Estruturas de dados (SEI)
+
+Construtores das estruturas do SEI.
+
+- [`Andamento()`](https://strategicprojects.github.io/rsei/reference/Andamento.md)
+  : Andamento
+- [`AndamentoMarcador()`](https://strategicprojects.github.io/rsei/reference/AndamentoMarcador.md)
+  : AndamentoMarcador
+- [`ArquivoExtensao()`](https://strategicprojects.github.io/rsei/reference/ArquivoExtensao.md)
+  : ArquivoExtensao
+- [`Assinatura()`](https://strategicprojects.github.io/rsei/reference/Assinatura.md)
+  : Assinatura
+- [`Assunto()`](https://strategicprojects.github.io/rsei/reference/Assunto.md)
+  : Assunto
+- [`AtributoAndamento()`](https://strategicprojects.github.io/rsei/reference/AtributoAndamento.md)
+  : AtributoAndamento
+- [`AtributoOuvidoria()`](https://strategicprojects.github.io/rsei/reference/AtributoOuvidoria.md)
+  : AtributoOuvidoria
+- [`Cargo()`](https://strategicprojects.github.io/rsei/reference/Cargo.md)
+  : Cargo
+- [`Cidade()`](https://strategicprojects.github.io/rsei/reference/Cidade.md)
+  : Cidade
+- [`Contato()`](https://strategicprojects.github.io/rsei/reference/Contato.md)
+  : Contato
+- [`DefinicaoControlePrazo()`](https://strategicprojects.github.io/rsei/reference/DefinicaoControlePrazo.md)
+  : DefinicaoControlePrazo
+- [`DefinicaoMarcador()`](https://strategicprojects.github.io/rsei/reference/DefinicaoMarcador.md)
+  : DefinicaoMarcador
+- [`Destinatario()`](https://strategicprojects.github.io/rsei/reference/Destinatario.md)
+  : Destinatario
+- [`Documento()`](https://strategicprojects.github.io/rsei/reference/Documento.md)
+  : Documento
+- [`Estado()`](https://strategicprojects.github.io/rsei/reference/Estado.md)
+  : Estado
+- [`Feriado()`](https://strategicprojects.github.io/rsei/reference/Feriado.md)
+  : Feriado
+- [`HipoteseLegal()`](https://strategicprojects.github.io/rsei/reference/HipoteseLegal.md)
+  : HipoteseLegal
+- [`Interessado()`](https://strategicprojects.github.io/rsei/reference/Interessado.md)
+  : Interessado
+- [`Marcador()`](https://strategicprojects.github.io/rsei/reference/Marcador.md)
+  : Marcador
+- [`Observacao()`](https://strategicprojects.github.io/rsei/reference/Observacao.md)
+  : Observacao
+- [`Pais()`](https://strategicprojects.github.io/rsei/reference/Pais.md)
+  : Pais
+- [`Procedimento()`](https://strategicprojects.github.io/rsei/reference/Procedimento.md)
+  : Procedimento
+- [`ProcedimentoResumido()`](https://strategicprojects.github.io/rsei/reference/ProcedimentoResumido.md)
+  : ProcedimentoResumido
+- [`ProtocoloBloco()`](https://strategicprojects.github.io/rsei/reference/ProtocoloBloco.md)
+  : ProtocoloBloco
+- [`Publicacao()`](https://strategicprojects.github.io/rsei/reference/Publicacao.md)
+  : Publicacao
+- [`PublicacaoImprensaNacional()`](https://strategicprojects.github.io/rsei/reference/PublicacaoImprensaNacional.md)
+  : PublicacaoImprensaNacional
+- [`Remetente()`](https://strategicprojects.github.io/rsei/reference/Remetente.md)
+  : Remetente
+- [`Serie()`](https://strategicprojects.github.io/rsei/reference/Serie.md)
+  : Serie
+- [`TipoConferencia()`](https://strategicprojects.github.io/rsei/reference/TipoConferencia.md)
+  : TipoConferencia
+- [`TipoProcedimento()`](https://strategicprojects.github.io/rsei/reference/TipoProcedimento.md)
+  : TipoProcedimento
+- [`Unidade()`](https://strategicprojects.github.io/rsei/reference/Unidade.md)
+  : Unidade
+- [`UnidadeProcedimentoAberto()`](https://strategicprojects.github.io/rsei/reference/UnidadeProcedimentoAberto.md)
+  : UnidadeProcedimentoAberto
+- [`Usuario()`](https://strategicprojects.github.io/rsei/reference/Usuario.md)
+  : Usuario
+
+## Pacote
+
+- [`rsei`](https://strategicprojects.github.io/rsei/reference/rsei-package.md)
+  [`rsei-package`](https://strategicprojects.github.io/rsei/reference/rsei-package.md)
+  : rsei: Client for the 'SEI' Electronic Information System Web
+  Services
+- [`` `%>%` ``](https://strategicprojects.github.io/rsei/reference/pipe.md)
+  : Pipe operator
+
+# Articles
+
+### All vignettes
+
+- [Consultando processos no
+  SEI](https://strategicprojects.github.io/rsei/articles/consultando-processos.md):

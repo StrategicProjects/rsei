@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#096B72"/>
+    </marker>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #0b3d40; }
+      .sub   { font-size: 13px; fill: #4a6a6c; }
+      .step  { fill: #ffffff; stroke: #096B72; stroke-width: 1.5; }
+      .stepc { fill: #096B72; }
+      .tb    { font-size: 13px; font-weight: 700; fill: #0b3d40; }
+      .tw    { font-size: 13px; font-weight: 700; fill: #ffffff; }
+      .mono  { font-family: "JetBrains Mono", Consolas, monospace; font-size: 11px; fill: #143b3d; }
+      .monow { font-family: "JetBrains Mono", Consolas, monospace; font-size: 11px; fill: #dff0f1; }
+      .edge  { stroke: #096B72; stroke-width: 1.8; fill: none; }
+      .elbl  { font-size: 11px; fill: #4a6a6c; }
+      .dec   { fill: #fff4e6; stroke: #d98a2b; stroke-width: 1.5; }
+      .dect  { font-size: 12px; font-weight: 700; fill: #7a4a12; }
+    </style>
+  </defs>
+
+  <text x="40" y="40" class="title">rsei — fluxo de uma chamada</text>
+  <text x="40" y="60" class="sub">Ex.: consultar_procedimento("12.1.000000077-4")</text>
+
+  <!-- step 1 -->
+  <rect x="40" y="90" width="150" height="60" rx="6" class="step"/>
+  <text x="115" y="115" text-anchor="middle" class="tb">1. Função</text>
+  <text x="115" y="134" text-anchor="middle" class="mono">consultar_procedimento()</text>
+
+  <!-- step 2 -->
+  <rect x="230" y="90" width="150" height="60" rx="6" class="stepc"/>
+  <text x="305" y="115" text-anchor="middle" class="tw">2. Envelope</text>
+  <text x="305" y="134" text-anchor="middle" class="monow">sei_build_envelope()</text>
+
+  <!-- step 3 -->
+  <rect x="420" y="90" width="150" height="60" rx="6" class="stepc"/>
+  <text x="495" y="115" text-anchor="middle" class="tw">3. POST httr2</text>
+  <text x="495" y="134" text-anchor="middle" class="monow">sei_call() · timeout</text>
+
+  <!-- step 4 endpoint -->
+  <rect x="610" y="90" width="230" height="60" rx="6" class="step"/>
+  <text x="725" y="115" text-anchor="middle" class="tb">4. SEI Web Service</text>
+  <text x="725" y="134" text-anchor="middle" class="mono">resposta XML (SOAP)</text>
+
+  <!-- arrows row 1 -->
+  <path class="edge" d="M190,120 L230,120" marker-end="url(#a2)"/>
+  <path class="edge" d="M380,120 L420,120" marker-end="url(#a2)"/>
+  <path class="edge" d="M570,120 L610,120" marker-end="url(#a2)"/>
+
+  <!-- down to decision -->
+  <path class="edge" d="M725,150 L725,200" marker-end="url(#a2)"/>
+
+  <!-- decision: SOAP Fault? -->
+  <polygon points="725,200 815,240 725,280 635,240" class="dec"/>
+  <text x="725" y="237" text-anchor="middle" class="dect">SOAP Fault?</text>
+  <text x="725" y="254" text-anchor="middle" class="dect">/ HTTP &gt;= 300?</text>
+
+  <!-- fault -> stop -->
+  <rect x="610" y="320" width="230" height="56" rx="6" class="dec"/>
+  <text x="725" y="344" text-anchor="middle" class="dect">stop() com mensagem clara</text>
+  <text x="725" y="362" text-anchor="middle" class="mono">faultstring / HTTP / timeout</text>
+  <path class="edge" d="M725,280 L725,320" marker-end="url(#a2)"/>
+  <text x="735" y="302" class="elbl">sim</text>
+
+  <!-- ok -> parse -->
+  <rect x="320" y="212" width="170" height="56" rx="6" class="stepc"/>
+  <text x="405" y="236" text-anchor="middle" class="tw">5. Parse xml2</text>
+  <text x="405" y="254" text-anchor="middle" class="monow">parse_*_response()</text>
+  <path class="edge" d="M635,240 L490,240" marker-end="url(#a2)"/>
+  <text x="540" y="232" class="elbl">não</text>
+
+  <!-- parse -> tibble -->
+  <rect x="320" y="320" width="170" height="56" rx="6" class="step"/>
+  <text x="405" y="344" text-anchor="middle" class="tb">6. tibble</text>
+  <text x="405" y="362" text-anchor="middle" class="mono">1 linha + colunas-lista</text>
+  <path class="edge" d="M405,268 L405,320" marker-end="url(#a2)"/>
+
+  <text x="40" y="350" class="sub" font-style="italic">raw = TRUE</text>
+  <text x="40" y="368" class="mono">devolve o xml_document</text>
+</svg>
