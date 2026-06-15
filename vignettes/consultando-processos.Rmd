@@ -70,11 +70,18 @@ doc <- consultar_procedimento("0000000000.000001/2020-11", config = cfg, raw = T
 
 ## Consultar vários processos
 
-Como o retorno é um `tibble`, empilhar resultados é direto:
+`consultar_procedimentos()` (plural) consulta um vetor de protocolos e empilha
+tudo num único `tibble`, com uma coluna `protocolo` e uma coluna `erro` (`NA`
+quando deu certo). Um protocolo inválido não interrompe o lote:
 
 ```{r}
 protocolos <- c("0000000000.000001/2020-11", "0000000000.000003/2020-33")
-processos  <- purrr::map_dfr(protocolos, consultar_procedimento, config = cfg)
+processos  <- consultar_procedimentos(protocolos, config = cfg)
+
+processos[, c("protocolo", "Especificacao", "NivelAcessoGlobal", "erro")]
+
+# processos que falharam
+subset(processos, !is.na(erro), c("protocolo", "erro"))
 ```
 
 ## Documentos e publicações
