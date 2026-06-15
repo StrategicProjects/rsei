@@ -12,3 +12,5 @@
 ^\.claude$
 ^LICENSE\.md$
 ^CRAN-SUBMISSION$
+^\.dev_.*\.R$
+^\.dev
