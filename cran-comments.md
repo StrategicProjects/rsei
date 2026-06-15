@@ -21,3 +21,8 @@ from the CRAN check machines. Accordingly:
 ## Test environments
 
 * Ubuntu 22.04, R 4.x (R CMD check --as-cran)
+
+## URLs
+The attribution link to https://monitoramento.sepe.pe.gov.br (the maintainers'
+institution) is valid; it may occasionally be flagged if the checking host
+cannot reach the Brazilian government server.

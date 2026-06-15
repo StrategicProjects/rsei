@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rsei (R + SEI) <a href="https://monitoramento.sepe.pe.gov.br/rsei/"><img src="man/figures/logo.png" align="right" height="113" alt="rsei website" /></a>
+# rsei (R + SEI) <a href="https://strategicprojects.github.io/rsei/"><img src="man/figures/logo.png" align="right" height="113" alt="rsei website" /></a>
 
 <!-- badges: start -->
 
