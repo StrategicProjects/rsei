@@ -191,3 +191,33 @@ parse_andamento_item <- function(node) {
     Atributos        = list(atributos)
   )
 }
+
+#' @title parse_andamento_marcador_item
+#' @description Parseia um `<item>` de `AndamentoMarcador` no contexto de
+#'   `listarAndamentosMarcadores` (texto do marcador, data/hora, usuário e
+#'   marcador associado).
+#' @param node Nó `xml2` de um `<item>`.
+#' @return Um tibble de 1 linha.
+#' @export
+parse_andamento_marcador_item <- function(node) {
+  if (is.null(node) || inherits(node, "xml_missing") || is.na(node)) {
+    return(tibble::tibble(
+      IdAndamentoMarcador = NA_character_, Texto = NA_character_,
+      DataHora = NA_character_, IdUsuario = NA_character_,
+      SiglaUsuario = NA_character_, NomeUsuario = NA_character_,
+      IdMarcador = NA_character_, NomeMarcador = NA_character_
+    ))
+  }
+  usr <- sei_node_child(node, "Usuario")
+  mrc <- sei_node_child(node, "Marcador")
+  tibble::tibble(
+    IdAndamentoMarcador = get_text_child(node, "IdAndamentoMarcador"),
+    Texto               = get_text_child(node, "Texto"),
+    DataHora            = get_text_child(node, "DataHora"),
+    IdUsuario           = get_text_child(usr, "IdUsuario"),
+    SiglaUsuario        = get_text_child(usr, "Sigla"),
+    NomeUsuario         = get_text_child(usr, "Nome"),
+    IdMarcador          = get_text_child(mrc, "IdMarcador"),
+    NomeMarcador        = get_text_child(mrc, "Nome")
+  )
+}

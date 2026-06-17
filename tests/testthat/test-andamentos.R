@@ -46,3 +46,33 @@ test_that("listar_andamentos_completo monta filtro amplo de tarefas", {
   # Tarefas vira lista (array) com 50 itens
   expect_length(captured$Tarefas, 50L)
 })
+
+test_that("parse_andamento_marcador_item lê a fixture", {
+  doc <- xml2::read_xml(test_path("fixtures", "listarAndamentosMarcadores.xml"))
+  res <- parse_list_response(doc, "listarAndamentosMarcadoresResponse",
+                             parse_andamento_marcador_item)
+
+  expect_equal(nrow(res), 2L)
+  expect_true(all(c("IdAndamentoMarcador", "Texto", "DataHora", "SiglaUsuario",
+                    "NomeUsuario", "IdMarcador", "NomeMarcador") %in% names(res)))
+  primeiro <- res[res$IdAndamentoMarcador == "501", ]
+  expect_equal(primeiro$Texto, "Aguardando parecer")
+  expect_equal(primeiro$NomeMarcador, "Urgente")
+  expect_equal(primeiro$SiglaUsuario, "usuario.um")
+})
+
+test_that("listar_andamentos_marcadores monta os parâmetros e parseia", {
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    sei_call = function(operation, params = list(), config = sei_config(), ...) {
+      captured <<- params
+      xml2::read_xml(test_path("fixtures", "listarAndamentosMarcadores.xml"))
+    }
+  )
+  res <- listar_andamentos_marcadores("12.1.077-4", config = cfg_a(),
+                                      marcadores = c("10", "20"))
+  expect_equal(captured$ProtocoloProcedimento, "12.1.077-4")
+  expect_length(captured$Marcadores, 2L)
+  expect_equal(nrow(res), 2L)
+  expect_equal(res$NomeMarcador, c("Urgente", "Revisado"))
+})

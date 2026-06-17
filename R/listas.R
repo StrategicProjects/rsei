@@ -269,6 +269,30 @@ listar_andamentos <- function(protocolo_procedimento, config = sei_config(),
              raw = raw, verbose = verbose)
 }
 
+#' @title listar_andamentos_marcadores
+#' @description Lista os eventos de marcador de um processo
+#'   (`listarAndamentosMarcadores`): cada item traz o texto do marcador, a
+#'   data/hora, o usuário responsável e o marcador associado.
+#' @param protocolo_procedimento Character. Número do processo.
+#' @param config Um objeto [sei_config()].
+#' @param marcadores Vetor opcional de identificadores de marcador (filtro);
+#'   se `NULL`, retorna todos.
+#' @param raw,verbose Logical.
+#' @return Um `tibble` com uma linha por evento de marcador.
+#' @export
+listar_andamentos_marcadores <- function(protocolo_procedimento, config = sei_config(),
+                                         marcadores = NULL,
+                                         raw = FALSE, verbose = FALSE) {
+  as_list <- function(x) if (is.null(x)) NULL else as.list(as.character(x))
+  sei_listar("listarAndamentosMarcadores", "listarAndamentosMarcadoresResponse", config,
+             item_parser = parse_andamento_marcador_item,
+             extra = list(
+               ProtocoloProcedimento = protocolo_procedimento,
+               Marcadores            = as_list(marcadores)
+             ),
+             raw = raw, verbose = verbose)
+}
+
 #' @title listar_andamentos_completo
 #'
 #' @description

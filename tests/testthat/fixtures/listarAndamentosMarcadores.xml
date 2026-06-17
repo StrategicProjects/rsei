@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:listarAndamentosMarcadoresResponse>
+      <parametros SOAP-ENC:arrayType="ns1:AndamentoMarcador[2]" xsi:type="ns1:ArrayOfAndamentoMarcador">
+        <item xsi:type="ns1:AndamentoMarcador">
+          <IdAndamentoMarcador xsi:type="xsd:string">501</IdAndamentoMarcador>
+          <Texto xsi:type="xsd:string">Aguardando parecer</Texto>
+          <DataHora xsi:type="xsd:string">07/04/2026 11:20:00</DataHora>
+          <Usuario xsi:type="ns1:Usuario">
+            <IdUsuario xsi:type="xsd:string">1</IdUsuario>
+            <Sigla xsi:type="xsd:string">usuario.um</Sigla>
+            <Nome xsi:type="xsd:string">Usuario Um</Nome>
+          </Usuario>
+          <Marcador xsi:type="ns1:Marcador">
+            <IdMarcador xsi:type="xsd:string">10</IdMarcador>
+            <Nome xsi:type="xsd:string">Urgente</Nome>
+            <Icone xsi:type="xsd:string">vermelho.png</Icone>
+            <SinAtivo xsi:type="xsd:string">S</SinAtivo>
+          </Marcador>
+        </item>
+        <item xsi:type="ns1:AndamentoMarcador">
+          <IdAndamentoMarcador xsi:type="xsd:string">502</IdAndamentoMarcador>
+          <Texto xsi:type="xsd:string">Conferido</Texto>
+          <DataHora xsi:type="xsd:string">07/04/2026 16:05:00</DataHora>
+          <Usuario xsi:type="ns1:Usuario">
+            <IdUsuario xsi:type="xsd:string">2</IdUsuario>
+            <Sigla xsi:type="xsd:string">usuario.dois</Sigla>
+            <Nome xsi:type="xsd:string">Usuario Dois</Nome>
+          </Usuario>
+          <Marcador xsi:type="ns1:Marcador">
+            <IdMarcador xsi:type="xsd:string">20</IdMarcador>
+            <Nome xsi:type="xsd:string">Revisado</Nome>
+            <Icone xsi:type="xsd:string">verde.png</Icone>
+            <SinAtivo xsi:type="xsd:string">S</SinAtivo>
+          </Marcador>
+        </item>
+      </parametros>
+    </ns1:listarAndamentosMarcadoresResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

@@ -63,6 +63,7 @@ reference:
   desc: Informações derivadas de um processo (reconstruídas a partir dos andamentos).
   contents:
   - listar_andamentos
+  - listar_andamentos_marcadores
   - listar_andamentos_completo
   - listar_documentos_processo
   - listar_publicacoes_processo
