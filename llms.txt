@@ -135,6 +135,8 @@ andamentos).
 
 - [`listar_andamentos()`](https://strategicprojects.github.io/rsei/reference/listar_andamentos.md)
   : listar_andamentos
+- [`listar_andamentos_marcadores()`](https://strategicprojects.github.io/rsei/reference/listar_andamentos_marcadores.md)
+  : listar_andamentos_marcadores
 - [`listar_andamentos_completo()`](https://strategicprojects.github.io/rsei/reference/listar_andamentos_completo.md)
   : listar_andamentos_completo
 - [`listar_documentos_processo()`](https://strategicprojects.github.io/rsei/reference/listar_documentos_processo.md)
@@ -304,6 +306,9 @@ Motor SOAP e utilitários de requisição.
 
 - [`parse_andamento_item()`](https://strategicprojects.github.io/rsei/reference/parse_andamento_item.md)
   : parse_andamento_item
+
+- [`parse_andamento_marcador_item()`](https://strategicprojects.github.io/rsei/reference/parse_andamento_marcador_item.md)
+  : parse_andamento_marcador_item
 
 - [`parse_andamento_response()`](https://strategicprojects.github.io/rsei/reference/parse_andamento_response.md)
   : parse_andamento_response

@@ -79,6 +79,7 @@
 <url><loc>https://strategicprojects.github.io/rsei/reference/lancar_andamento.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/listar_andamentos.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/listar_andamentos_completo.html</loc></url>
+<url><loc>https://strategicprojects.github.io/rsei/reference/listar_andamentos_marcadores.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/listar_cargos.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/listar_cidades.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/listar_contatos.html</loc></url>
@@ -99,6 +100,7 @@
 <url><loc>https://strategicprojects.github.io/rsei/reference/listar_usuarios.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/parse_andamento.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/parse_andamento_item.html</loc></url>
+<url><loc>https://strategicprojects.github.io/rsei/reference/parse_andamento_marcador_item.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/parse_andamento_response.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/parse_arquivo_extensao.html</loc></url>
 <url><loc>https://strategicprojects.github.io/rsei/reference/parse_assinatura.html</loc></url>
