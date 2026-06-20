@@ -218,13 +218,20 @@ sobretudo as operações de escrita — antes de tocar em produção.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/rsei" class="external-link">rsei</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Guarde a chave fora do código (keyring); faça isso uma vez por máquina.</span></span>
-<span><span class="fu"><a href="../reference/store_sei_credentials.html">store_sei_credentials</a></span><span class="op">(</span>identificacao_servico <span class="op">=</span> <span class="st">"SUA_CHAVE_DE_ACESSO"</span><span class="op">)</span></span>
+<span><span class="co"># Guarde a sigla e a chave fora do código (keyring); faça isso uma vez por máquina.</span></span>
+<span><span class="fu"><a href="../reference/store_sei_credentials.html">store_sei_credentials</a></span><span class="op">(</span></span>
+<span>  service_name <span class="op">=</span> <span class="st">"SEI_WS"</span>,</span>
+<span>  username     <span class="op">=</span> <span class="st">"MEU_SISTEMA"</span>,        <span class="co"># sigla do sistema (SiglaSistema)</span></span>
+<span>  password     <span class="op">=</span> <span class="st">"SUA_CHAVE_DE_ACESSO"</span> <span class="co"># chave de acesso (IdentificacaoServico)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Recupere as credenciais guardadas quando precisar montar a configuração.</span></span>
+<span><span class="va">creds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_sei_credentials.html">get_sei_credentials</a></span><span class="op">(</span><span class="st">"SEI_WS"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sei_config.html">sei_config</a></span><span class="op">(</span></span>
 <span>  sei_url               <span class="op">=</span> <span class="st">"https://sei.exemplo.gov.br/sei/ws/SeiWS.php"</span>,</span>
-<span>  sigla_sistema         <span class="op">=</span> <span class="st">"MEU_SISTEMA"</span>,</span>
-<span>  identificacao_servico <span class="op">=</span> <span class="fu"><a href="../reference/get_sei_credentials.html">get_sei_credentials</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  sigla_sistema         <span class="op">=</span> <span class="va">creds</span><span class="op">$</span><span class="va">username</span>,</span>
+<span>  identificacao_servico <span class="op">=</span> <span class="va">creds</span><span class="op">$</span><span class="va">password</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Teste rápido: uma listagem leve confirma sigla + chave + liberação de IP.</span></span>

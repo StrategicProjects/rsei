@@ -9,7 +9,9 @@ frames. Covers process and document queries, listing services, write
 operations (creating processes and documents, sending and signing off
 processes, blocks, deadlines and markers) and the permission services of
 the companion 'SIP' system. Note that access to the web services is
-restricted by the server to previously authorized network addresses.
+restricted by the server to previously authorized network addresses. For
+more information about the 'SEI' system and its web services see
+<https://www.gov.br/gestao/pt-br/assuntos/processo-eletronico-nacional>.
 
 ## Acesso restrito por IP
 
@@ -37,6 +39,8 @@ Useful links:
 **Maintainer**: Andre Leite <leite@castlab.org>
 
 Authors:
+
+- Andre Leite <leite@castlab.org>
 
 - Marcos Wasilew <marcos.wasilew@gmail.com>
 
