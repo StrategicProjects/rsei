@@ -1,3 +1,19 @@
+## Resubmission
+
+This is a resubmission. In response to the review by Konstanze Lauseker we have
+made the following changes:
+
+* Added a reference to the web services in the `Description` field of
+  `DESCRIPTION`, using angle brackets for auto-linking and no space after
+  `https:`
+  (`<https://www.gov.br/gestao/pt-br/assuntos/processo-eletronico-nacional>`).
+* Removed the examples for unexported functions. The two functions that had
+  examples while being unexported (`get_sei_credentials()` and
+  `store_sei_credentials()`) are user-facing credential helpers (they are
+  referenced in the package vignette), so we have exported them instead of
+  omitting their examples. There are no longer any examples for unexported
+  functions.
+
 ## R CMD check results
 
 0 errors | 0 warnings | 1 note

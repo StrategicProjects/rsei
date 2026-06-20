@@ -18,6 +18,8 @@
 #' @return Invisibly returns a logical value: `TRUE` if credentials were stored successfully,
 #'   or `FALSE` otherwise.
 #'
+#' @export
+#'
 #' @examples
 #' \dontrun{
 #' store_sei_credentials(
@@ -86,6 +88,8 @@ store_sei_credentials <- function(service_name,
 #'   \item \code{extras}: A list of additional parameters (if any).
 #' }
 #' Returns `NULL` if no credentials are found or if an error occurred.
+#'
+#' @export
 #'
 #' @examples
 #' \dontrun{
