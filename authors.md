@@ -8,7 +8,7 @@
 
 - **Hugo Vasconcelos**. Author.
 
-- **Carlos Amorin**. Author.
+- **Carlos Amorim**. Author.
 
 - **Diogo Bezerra**. Author.
 
@@ -19,14 +19,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/StrategicProjects/rsei/blob/main/DESCRIPTION)
 
-Leite A, Wasilew M, Vasconcelos H, Amorin C, Bezerra D, Nascimento
+Leite A, Wasilew M, Vasconcelos H, Amorim C, Bezerra D, Nascimento
 Barreto J (2026). *rsei: Client for the 'SEI' Electronic Information
 System Web Services*. R package version 0.1.0,
 <https://github.com/StrategicProjects/rsei>.
 
     @Manual{,
       title = {rsei: Client for the 'SEI' Electronic Information System Web Services},
-      author = {Andre Leite and Marcos Wasilew and Hugo Vasconcelos and Carlos Amorin and Diogo Bezerra and Júlia {Nascimento Barreto}},
+      author = {Andre Leite and Marcos Wasilew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra and Júlia {Nascimento Barreto}},
       year = {2026},
       note = {R package version 0.1.0},
       url = {https://github.com/StrategicProjects/rsei},

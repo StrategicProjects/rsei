@@ -2,6 +2,8 @@
 
 ## rsei 0.1.0
 
+CRAN release: 2026-06-25
+
 Primeira versão do `rsei`, um cliente em R para os Web Services SOAP do
 **SEI** (Sistema Eletrônico de Informações) e do **SIP** (Sistema de
 Permissões).
