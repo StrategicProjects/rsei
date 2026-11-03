@@ -1,3 +1,15 @@
+## rsei 0.1.1 — resubmission
+
+This is a resubmission of 0.1.1. The incoming pre-tests flagged two URLs:
+
+* README.md: the institutional link now points to the new address
+  <https://digital.seplag.pe.gov.br/> (the old one returned 301).
+* DESCRIPTION/man: the link to the Brazilian government page about the SEI
+  system was replaced by <https://github.com/pengovbr> (the official GitHub
+  organization of the "Processo Eletrônico Nacional"), because the gov.br
+  server blocks automated clients (403/404), although the page itself is
+  available in a browser.
+
 ## rsei 0.1.1
 
 This is a minor update of a package already on CRAN (rsei 0.1.0).
