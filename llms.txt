@@ -100,7 +100,7 @@ em ambiente de homologação/treino antes de uso em produção.
 
 `rsei` faz parte de um ecossistema de pacotes R desenvolvido na
 [Secretaria Executiva de Monitoramento
-Estratégico](https://monitoramento.sepe.pe.gov.br). \`\`\`
+Estratégico](https://digital.seplag.pe.gov.br/).
 
 # Package index
 

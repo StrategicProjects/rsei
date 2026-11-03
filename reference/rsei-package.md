@@ -11,7 +11,7 @@ processes, blocks, deadlines and markers) and the permission services of
 the companion 'SIP' system. Note that access to the web services is
 restricted by the server to previously authorized network addresses. For
 more information about the 'SEI' system and its web services see
-<https://www.gov.br/gestao/pt-br/assuntos/processo-eletronico-nacional>.
+<https://github.com/pengovbr>.
 
 ## Acesso restrito por IP
 
