@@ -138,6 +138,8 @@ Tabelas de apoio liberadas ao serviço.
 
 - [`gerar_bloco()`](https://strategicprojects.github.io/rsei/reference/gerar_bloco.md)
   : gerar_bloco
+- [`alterar_bloco()`](https://strategicprojects.github.io/rsei/reference/alterar_bloco.md)
+  : alterar_bloco
 - [`incluir_documento_bloco()`](https://strategicprojects.github.io/rsei/reference/incluir_documento_bloco.md)
   : incluir_documento_bloco
 - [`incluir_processo_bloco()`](https://strategicprojects.github.io/rsei/reference/incluir_processo_bloco.md)

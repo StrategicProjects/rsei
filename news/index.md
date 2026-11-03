@@ -1,5 +1,32 @@
 # Changelog
 
+## rsei 0.1.1
+
+Atualização de compatibilidade com o **SEI 5**. A API SOAP do SEI 5
+mantém todas as operações da v4 (o pacote segue funcionando sem
+mudanças) e acrescenta algumas novidades, agora cobertas:
+
+### Novidades do SEI 5
+
+- [`alterar_bloco()`](https://strategicprojects.github.io/rsei/reference/alterar_bloco.md)
+  — nova função para a operação `alterarBloco` (altera a descrição e as
+  unidades de disponibilização de um bloco existente).
+- [`enviar_email()`](https://strategicprojects.github.io/rsei/reference/enviar_email.md)
+  ganhou os argumentos opcionais `nivel_acesso` e `id_hipotese_legal`
+  (novos parâmetros `NivelAcesso`/`IdHipoteseLegal` de `enviarEmail`).
+  Quando omitidos, o envelope é idêntico ao anterior.
+- [`listar_tipos_procedimento()`](https://strategicprojects.github.io/rsei/reference/listar_tipos_procedimento.md)
+  e
+  [`listar_tipos_procedimento_ouvidoria()`](https://strategicprojects.github.io/rsei/reference/listar_tipos_procedimento_ouvidoria.md)
+  agora retornam a coluna `SinOuvidoriaAnonimo` (novo campo da estrutura
+  `TipoProcedimento`; `NA` em instalações SEI 4 ou quando o servidor não
+  emite o campo).
+
+### Outras mudanças
+
+- Metadados dos autores atualizados (grafias corrigidas e
+  identificadores ORCID).
+
 ## rsei 0.1.0
 
 CRAN release: 2026-06-25

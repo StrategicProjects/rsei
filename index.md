@@ -9,6 +9,13 @@ esperado pelo SEI, executa as chamadas com `httr2`, trata erros HTTP e
 serviços do **SIP** (`listar_permissao`, `replicar_permissao`,
 `replicar_usuario`).
 
+Compatível com o **SEI 4 e o SEI 5**: a API SOAP do SEI 5 mantém todas
+as operações da v4, e as novidades que ela introduz já estão cobertas
+([`alterar_bloco()`](https://strategicprojects.github.io/rsei/reference/alterar_bloco.md),
+níveis de acesso em
+[`enviar_email()`](https://strategicprojects.github.io/rsei/reference/enviar_email.md)
+e o campo `SinOuvidoriaAnonimo` nos tipos de processo).
+
 > **⚠️ Acesso restrito por IP.** Os Web Services do SEI são protegidos
 > por *firewall*: só respondem a requisições vindas de **IPs/servidores
 > previamente autorizados** no cadastro do serviço no SEI. As funções
@@ -41,6 +48,10 @@ tibble](reference/figures/fluxo.svg)
 
 ``` r
 
+# Versão estável, do CRAN
+install.packages("rsei")
+
+# Versão de desenvolvimento, do GitHub
 # install.packages("remotes")
 remotes::install_github("StrategicProjects/rsei")
 ```
