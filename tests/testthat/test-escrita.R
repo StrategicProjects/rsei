@@ -78,6 +78,54 @@ test_that("enviar_processo monta UnidadesDestino como array e une Para por ';'",
                assunto = "s", mensagem = "m", config = cfg_w())
 })
 
+test_that("enviar_email aceita nivel_acesso/id_hipotese_legal (SEI 5) e omite quando NULL", {
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    sei_call = function(operation, params = list(), config = sei_config(), ...) {
+      captured <<- params
+      xml2::read_xml(test_path("fixtures", "retornoBoolTrue.xml"))
+    }
+  )
+  enviar_email("12.1.077-4", de = "a@x", para = "b@x", assunto = "s", mensagem = "m",
+               nivel_acesso = "1", id_hipotese_legal = "7", config = cfg_w())
+  expect_equal(captured$NivelAcesso, "1")
+  expect_equal(captured$IdHipoteseLegal, "7")
+
+  enviar_email("12.1.077-4", de = "a@x", para = "b@x", assunto = "s", mensagem = "m",
+               config = cfg_w())
+  env <- sei_build_envelope("enviarEmail", captured)
+  x <- xml2::read_xml(env)
+  expect_length(xml2::xml_find_all(x, "//*[local-name()='NivelAcesso']"), 0)
+  expect_length(xml2::xml_find_all(x, "//*[local-name()='IdHipoteseLegal']"), 0)
+})
+
+test_that("alterar_bloco (SEI 5) monta params e parseia retorno booleano", {
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    sei_call = function(operation, params = list(), config = sei_config(), ...) {
+      captured <<- list(op = operation, params = params)
+      xml2::read_xml(test_path("fixtures", "retornoBoolTrue.xml"))
+    }
+  )
+  res <- alterar_bloco("55", descricao = "Nova descricao",
+                       unidades_disponibilizacao = c("110", "120"), config = cfg_w())
+  expect_true(res)
+  expect_equal(captured$op, "alterarBloco")
+  expect_equal(captured$params$IdBloco, "55")
+  expect_equal(captured$params$Descricao, "Nova descricao")
+
+  env <- sei_build_envelope("alterarBloco", captured$params)
+  itens <- xml2::xml_find_all(xml2::read_xml(env),
+    "//*[local-name()='UnidadesDisponibilizacao']/*[local-name()='item']")
+  expect_length(itens, 2)
+
+  # sem unidades: tag omitida
+  alterar_bloco("55", descricao = "d", config = cfg_w())
+  env2 <- sei_build_envelope("alterarBloco", captured$params)
+  expect_length(xml2::xml_find_all(xml2::read_xml(env2),
+    "//*[local-name()='UnidadesDisponibilizacao']"), 0)
+})
+
 test_that("sei_parse_bool interpreta variações", {
   mk <- function(v) xml2::read_xml(sprintf(
     "<E xmlns:ns1='Sei'><ns1:r><parametros>%s</parametros></ns1:r></E>", v))

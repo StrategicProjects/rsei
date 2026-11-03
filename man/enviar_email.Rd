@@ -12,6 +12,8 @@ enviar_email(
   mensagem,
   cco = NULL,
   id_documentos = NULL,
+  nivel_acesso = NULL,
+  id_hipotese_legal = NULL,
   config = sei_config(),
   raw = FALSE,
   verbose = FALSE
@@ -29,6 +31,12 @@ enviar_email(
 \item{cco}{Vetor de destinatários em cópia oculta (opcional).}
 
 \item{id_documentos}{Vetor de ids de documentos a anexar (opcional).}
+
+\item{nivel_acesso}{Character opcional (SEI >= 5): "0" (público),
+"1" (restrito) ou "2" (sigiloso).}
+
+\item{id_hipotese_legal}{Character opcional (SEI >= 5): id da hipótese
+legal, obrigatório quando \code{nivel_acesso} é restrito/sigiloso.}
 
 \item{config}{Um objeto \code{\link[=sei_config]{sei_config()}}.}
 

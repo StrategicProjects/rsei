@@ -113,6 +113,7 @@ reference:
 - title: Escrita — blocos
   contents:
   - gerar_bloco
+  - alterar_bloco
   - incluir_documento_bloco
   - incluir_processo_bloco
   - retirar_documento_bloco

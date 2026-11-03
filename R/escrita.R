@@ -329,12 +329,17 @@ excluir_documento <- function(protocolo_documento, config = sei_config(), verbos
 #' @param assunto,mensagem Character.
 #' @param cco Vetor de destinatários em cópia oculta (opcional).
 #' @param id_documentos Vetor de ids de documentos a anexar (opcional).
+#' @param nivel_acesso Character opcional (SEI >= 5): "0" (público),
+#'   "1" (restrito) ou "2" (sigiloso).
+#' @param id_hipotese_legal Character opcional (SEI >= 5): id da hipótese
+#'   legal, obrigatório quando `nivel_acesso` é restrito/sigiloso.
 #' @param config Um objeto [sei_config()].
 #' @param raw,verbose Logical.
 #' @return Um `tibble` ([parse_retorno_envio_email]).
 #' @export
 enviar_email <- function(protocolo_procedimento, de, para, assunto, mensagem,
-                         cco = NULL, id_documentos = NULL, config = sei_config(),
+                         cco = NULL, id_documentos = NULL, nivel_acesso = NULL,
+                         id_hipotese_legal = NULL, config = sei_config(),
                          raw = FALSE, verbose = FALSE) {
   params <- .std_params(config,
     ProtocoloProcedimento = protocolo_procedimento,
@@ -342,7 +347,9 @@ enviar_email <- function(protocolo_procedimento, de, para, assunto, mensagem,
     Para = paste(para, collapse = ";"),
     CCO = if (is.null(cco)) NULL else paste(cco, collapse = ";"),
     Assunto = assunto, Mensagem = mensagem,
-    IdDocumentos = .as_item_list(id_documentos))
+    IdDocumentos = .as_item_list(id_documentos),
+    NivelAcesso = nivel_acesso,
+    IdHipoteseLegal = id_hipotese_legal)
   doc <- sei_call("enviarEmail", params, config, verbose = verbose)
   if (isTRUE(raw)) return(doc)
   parse_retorno_envio_email(doc)
@@ -441,6 +448,24 @@ gerar_bloco <- function(tipo, descricao, config = sei_config(),
   np <- sei_find_parametros(doc, "gerarBlocoResponse")
   if (is.null(np)) return(NA_character_)
   xml2::xml_text(np)
+}
+
+#' @title alterar_bloco
+#' @description Altera a descrição e as unidades de disponibilização de um
+#'   bloco existente (`alterarBloco`; operação disponível a partir do SEI 5).
+#' @param id_bloco Character. Número do bloco.
+#' @param descricao Character. Nova descrição do bloco.
+#' @param unidades_disponibilizacao Vetor de ids de unidades (ou `NULL`).
+#' @param config Um objeto [sei_config()].
+#' @param verbose Logical.
+#' @return `TRUE` em caso de sucesso.
+#' @export
+alterar_bloco <- function(id_bloco, descricao, unidades_disponibilizacao = NULL,
+                          config = sei_config(), verbose = FALSE) {
+  params <- .std_params(config,
+    IdBloco = id_bloco, Descricao = descricao,
+    UnidadesDisponibilizacao = .as_item_list(unidades_disponibilizacao))
+  sei_parse_bool(sei_call("alterarBloco", params, config, verbose = verbose))
 }
 
 #' @title incluir_documento_bloco

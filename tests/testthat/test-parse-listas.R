@@ -22,6 +22,18 @@ test_that("parse_list_struct parseia listarEstados com campos ausentes -> NA", {
   expect_true(all(!is.na(res$IdEstado)))
 })
 
+test_that("parse_list_struct parseia listarTiposProcedimento com SinOuvidoriaAnonimo (SEI 5)", {
+  doc <- xml2::read_xml(test_path("fixtures", "listarTiposProcedimento.xml"))
+  res <- parse_list_struct(doc, "listarTiposProcedimentoResponse",
+                           .sei_fields$tipo_procedimento)
+
+  expect_equal(nrow(res), 3L)
+  expect_named(res, c("IdTipoProcedimento", "Nome", "SinOuvidoriaAnonimo"))
+  expect_equal(res$SinOuvidoriaAnonimo[1:2], c("N", "S"))
+  # item sem o campo (instalacoes SEI 4) -> NA
+  expect_true(is.na(res$SinOuvidoriaAnonimo[3]))
+})
+
 test_that("parse_struct_nodeset devolve 0 linhas com colunas corretas p/ array vazio", {
   empty <- parse_struct_nodeset(list(), .sei_fields$pais)
   expect_equal(nrow(empty), 0L)

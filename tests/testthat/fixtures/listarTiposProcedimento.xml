@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="Sei" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+  <SOAP-ENV:Body>
+    <ns1:listarTiposProcedimentoResponse>
+      <parametros SOAP-ENC:arrayType="ns1:TipoProcedimento[3]" xsi:type="ns1:ArrayOfTipoProcedimento">
+        <item xsi:type="ns1:TipoProcedimento">
+          <IdTipoProcedimento xsi:type="xsd:string">100000101</IdTipoProcedimento>
+          <Nome xsi:type="xsd:string">Gestão: Exemplo A</Nome>
+          <SinOuvidoriaAnonimo xsi:type="xsd:string">N</SinOuvidoriaAnonimo>
+        </item>
+        <item xsi:type="ns1:TipoProcedimento">
+          <IdTipoProcedimento xsi:type="xsd:string">100000102</IdTipoProcedimento>
+          <Nome xsi:type="xsd:string">Ouvidoria: Exemplo B</Nome>
+          <SinOuvidoriaAnonimo xsi:type="xsd:string">S</SinOuvidoriaAnonimo>
+        </item>
+        <item xsi:type="ns1:TipoProcedimento">
+          <IdTipoProcedimento xsi:type="xsd:string">100000103</IdTipoProcedimento>
+          <Nome xsi:type="xsd:string">Gestão: Exemplo C (sem campo novo)</Nome>
+        </item>
+      </parametros>
+    </ns1:listarTiposProcedimentoResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
