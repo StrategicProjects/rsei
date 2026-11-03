@@ -5,7 +5,9 @@
 
 <!-- badges: start -->
 
-![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rsei)](https://CRAN.R-project.org/package=rsei)
+![](https://img.shields.io/badge/devel%20version-0.1.1-blue.svg)
 [![R-CMD-check](https://github.com/StrategicProjects/rsei/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/StrategicProjects/rsei/actions/workflows/R-CMD-check.yaml)
 [![pkgdown](https://github.com/StrategicProjects/rsei/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/StrategicProjects/rsei/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
@@ -18,6 +20,11 @@ esperado pelo SEI, executa as chamadas com `httr2`, trata erros HTTP e
 (`gerar_procedimento`, `incluir_documento`, `enviar_processo`, …) e os
 serviços do **SIP** (`listar_permissao`, `replicar_permissao`,
 `replicar_usuario`).
+
+Compatível com o **SEI 4 e o SEI 5**: a API SOAP do SEI 5 mantém todas
+as operações da v4, e as novidades que ela introduz já estão cobertas
+(`alterar_bloco()`, níveis de acesso em `enviar_email()` e o campo
+`SinOuvidoriaAnonimo` nos tipos de processo).
 
 > **⚠️ Acesso restrito por IP.** Os Web Services do SEI são protegidos
 > por *firewall*: só respondem a requisições vindas de **IPs/servidores
@@ -43,6 +50,10 @@ O fluxo de uma chamada — da função ao `tibble`, com tratamento de erro:
 ## Instalação
 
 ``` r
+# Versão estável, do CRAN
+install.packages("rsei")
+
+# Versão de desenvolvimento, do GitHub
 # install.packages("remotes")
 remotes::install_github("StrategicProjects/rsei")
 ```
@@ -85,7 +96,7 @@ series   <- listar_series(cfg)
 As operações de **escrita** alteram dados no SEI e devem ser validadas
 em ambiente de homologação/treino antes de uso em produção.
 
------
+------------------------------------------------------------------------
 
 `rsei` faz parte de um ecossistema de pacotes R desenvolvido na
 [Secretaria Executiva de Monitoramento

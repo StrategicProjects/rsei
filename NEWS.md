@@ -1,3 +1,26 @@
+# rsei 0.1.1
+
+Atualização de compatibilidade com o **SEI 5**. A API SOAP do SEI 5 mantém
+todas as operações da v4 (o pacote segue funcionando sem mudanças) e
+acrescenta algumas novidades, agora cobertas:
+
+## Novidades do SEI 5
+
+* `alterar_bloco()` — nova função para a operação `alterarBloco` (altera a
+  descrição e as unidades de disponibilização de um bloco existente).
+* `enviar_email()` ganhou os argumentos opcionais `nivel_acesso` e
+  `id_hipotese_legal` (novos parâmetros `NivelAcesso`/`IdHipoteseLegal` de
+  `enviarEmail`). Quando omitidos, o envelope é idêntico ao anterior.
+* `listar_tipos_procedimento()` e `listar_tipos_procedimento_ouvidoria()`
+  agora retornam a coluna `SinOuvidoriaAnonimo` (novo campo da estrutura
+  `TipoProcedimento`; `NA` em instalações SEI 4 ou quando o servidor não
+  emite o campo).
+
+## Outras mudanças
+
+* Metadados dos autores atualizados (grafias corrigidas e identificadores
+  ORCID).
+
 # rsei 0.1.0
 
 Primeira versão do `rsei`, um cliente em R para os Web Services SOAP do

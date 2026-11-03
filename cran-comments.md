@@ -1,24 +1,20 @@
-## Resubmission
+## rsei 0.1.1
 
-This is a resubmission. In response to the review by Konstanze Lauseker we have
-made the following changes:
+This is a minor update of a package already on CRAN (rsei 0.1.0).
 
-* Added a reference to the web services in the `Description` field of
-  `DESCRIPTION`, using angle brackets for auto-linking and no space after
-  `https:`
-  (`<https://www.gov.br/gestao/pt-br/assuntos/processo-eletronico-nacional>`).
-* Removed the examples for unexported functions. The two functions that had
-  examples while being unexported (`get_sei_credentials()` and
-  `store_sei_credentials()`) are user-facing credential helpers (they are
-  referenced in the package vignette), so we have exported them instead of
-  omitting their examples. There are no longer any examples for unexported
-  functions.
+Main changes (see NEWS.md):
+
+* Compatibility coverage for version 5 of the SEI system, whose SOAP API adds
+  one operation and a few parameters/fields on top of version 4: new function
+  `alterar_bloco()`; new optional arguments `nivel_acesso` and
+  `id_hipotese_legal` in `enviar_email()`; new `SinOuvidoriaAnonimo` column
+  parsed in the "tipos de procedimento" listings. All changes are additive and
+  backward compatible.
+* Updated author metadata (name spellings and ORCID identifiers).
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* This is a new submission.
+0 errors | 0 warnings | 0 notes
 
 ## Network access
 
@@ -36,9 +32,6 @@ from the CRAN check machines. Accordingly:
 
 ## Test environments
 
+* Local macOS, R 4.x (R CMD check --as-cran)
 * Ubuntu 22.04, R 4.x (R CMD check --as-cran)
-
-## URLs
-The attribution link to https://monitoramento.sepe.pe.gov.br (the maintainers'
-institution) is valid; it may occasionally be flagged if the checking host
-cannot reach the Brazilian government server.
+* GitHub Actions (R-CMD-check workflow)
