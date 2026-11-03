@@ -20,7 +20,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/StrategicProjects/rsei/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/StrategicProjects/rsei/blob/v0.1.1/DESCRIPTION)
 
 Leite A, Wasiliew M, Vasconcelos H, Amorim C, Bezerra D, Nascimento
 Barreto J (2026). *rsei: Client for the 'SEI' Electronic Information
